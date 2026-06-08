@@ -1,0 +1,6 @@
+1. 如果传入的是单参数且参数类型是一个List的时候，collection属性值为list
+2. 如果传入的是单参数且参数类型是一个array数组的时候，collection的属性值为array
+3. 如果传入的参数是多个的时候，我们就需要把它们封装成一个Map了，当然单参数也可
+————————————————
+版权声明：本文为CSDN博主「技术路上的苦行僧」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/jokeMqc/article/details/78444037

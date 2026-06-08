@@ -1,0 +1,23 @@
+$ git remote -v
+origin  https://github.com/mRcfps/python.git (fetch)
+origin  https://github.com/mRcfps/python.git (push)
+
+$ git remote add upstream https://github.com/exercism/python.git
+
+$ git remote -v
+
+origin  https://github.com/mRcfps/python.git (fetch)
+
+origin  https://github.com/mRcfps/python.git (push)
+
+upstream        https://github.com/exercism/python.git (fetch)
+
+upstream        https://github.com/exercism/python.git (push)
+
+
+
+$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master
+
+$ git push

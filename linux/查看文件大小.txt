@@ -1,0 +1,5 @@
+du -sh * 
+df -h
+du -h --max-depth=1
+
+cat /dev/null > *-json.log

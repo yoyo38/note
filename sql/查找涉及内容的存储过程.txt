@@ -1,0 +1,5 @@
+select name
+from sysobjects o, syscomments s
+where o.id = s.id
+and text like '%WishListing%'
+and o.xtype = 'P' 

@@ -1,0 +1,12 @@
+Class c = Class.forName("java.lang.String");
+getClass()
+Class clazz = Person.class;
+Integer.TYPE
+c1.getFields()  //只能找到public属性
+c1.getDeclaredFields() //找到全部属性
+c1.getAnnotations();
+c1.getAnnotation(XXX.class);
+method.getGenericParameterTypes();
+method.getGenericReturnType();
+ParameterizedType
+getActualTypeArguments()

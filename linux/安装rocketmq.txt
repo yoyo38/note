@@ -1,0 +1,28 @@
+wget https://archive.apache.org/dist/rocketmq/4.9.3/rocketmq-all-4.9.3-bin-release.zip
+
+unzip rocketmq-all-4.9.3-bin-release.zip
+
+vim broker.conf
+vim conf/broker.conf
+#IP替换为自己服务器具体的IP
+brokerIP1 = IP
+namesrvAddr = IP:9876
+##监听端口
+listenPort = 10911
+#需放开这两个端口的防火墙
+
+vim bin/runserver.sh
+-server -Xms256m
+
+vim bin/runbroker.sh
+-server -Xms256m
+
+vim /etc/profile
+添加：
+export NAMESRV_ADDR=服务器IP:9876
+
+重新加载环境变量：source /etc/profile
+
+mkdir log
+nohup bin/mqnamesrv > log/mqname.log  2>&1  &
+nohup bin/mqbroker -n 服务器地址:9876 -c conf/broker.conf autoCreateTopicEnable=true >   log/borker.log 2>&1 &

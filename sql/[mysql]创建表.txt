@@ -1,0 +1,94 @@
+说明:此文件包含了blog数据库中建立所有的表的Mysql语句.
+ 
+在sql语句中注意“约束的概念":
+1.实体完整性约束(主键--唯一且非空) primary key()
+    违约处理:No action(拒绝执行)
+ 
+2.参照完整性约束(外键约束)foregin key() references tableName(filedName) [on delete|update casecade | no action]
+  违约处理:级联更新或拒绝执行
+ 
+3.用户自定义完整性约束(not null,unique,check短语)
+      违约处理:拒绝执行
+ 
+//添加列语法
+//【alter table blog_article add columName type constraint】
+//添加约束例子
+//【alter table blog_article add CONSTRAINT foreign key(category_Name) references blog_category(category_Name) on delete cascade on update cascade】
+ 
+ 
+问题:如何让相册，相片，文章公用一个评论表?
+ 
+create database blog;
+ 
+create table blog_user
+(
+  user_Name char(15) not null check(user_Name !=''),
+  user_Password char(15) not null,
+  user_emial varchar(20) not null unique,
+  primary key(user_Name)         
+ 
+)engine=innodb default charset=utf8 auto_increment=1;
+ 
+ 
+ 
+ 
+create table blog_category
+(
+ category_Name char(18) not null check(category_Name!=''),
+ category_Date datetime not null,
+ primary key(category_Name)
+)engine=innod default charset=utf8 auto_increment=1;
+ 
+ 
+ 
+ 
+create table blog_article
+(
+  article_Id int unsigned not null  auto_increment,
+  article_title varchar(20) not null unique,
+  article_content longtext not null,
+  article_date datetime not null,
+  article_readTime int unsigned not null default 0,
+  user_Name char(15) not null,
+  category_Name char(18) not null,
+  primary key(article_Id),
+  foreign key(user_Name) references blog_user(user_Name) on delete cascade on update cascade,
+  foreign key(category_Name) references blog_category(category_Name) on delete cascade on update cascade
+)engine=innodb default charset=utf8 auto_increment=1;
+ 
+ 
+ 
+ 
+ 
+ 
+CREATE TABLE blog_comment (
+  comment_Id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  comment_Content varchar(90) NOT NULL,
+  comment_Date datetime NOT NULL,
+  article_Id int(10) unsigned NOT NULL,
+  user_Name char(15) NOT NULL,
+  PRIMARY KEY (comment_Id),
+  foreign key(article_Id) references blog_article(article_Id) on delete cascade on update cascade,
+  foreign key(user_Name) references blog_user(user_Name) on delete cascade on update cascade
+)engine=innodb default charset=utf8 auto_increment=1;
+ 
+ 
+ 
+create table blog_photoAlbum
+(
+  photoAlbum_Name char(20) not null check(photoAlbum_Name!=''),
+  photoAlbum_Date datetime not null,
+  primary key(photoAlbum_Name)
+)engine=innodb default charset=utf8;
+ 
+ 
+ 
+ 
+create table blog_photograph
+(
+  photograph_Name varchar(20) not null check(photograph_Name!=''),
+  photograph_Date datetime not null,
+  photoAlbum_Name char(20)  not null,
+  photoURL varchar(90) not null,
+  foreign key(photoAlbum_Name) references blog_photoAlbum(photoAlbum_Name) on delete cascade on update cascade
+)engine=innodb default charset=utf8;

@@ -1,0 +1,1 @@
+SELECT setval('t_rows_id_seq', (SELECT max(id) FROM t_rows))

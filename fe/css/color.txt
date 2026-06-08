@@ -1,0 +1,21 @@
+red:#b94a48  #d9534f #da4f49 #DB2828 #e74c3c #c00 #e66666 #F07F7F #ff6a6a
+blue: #01AAED #2185D0 #3a9bd9 #45badb #4a90e2(选中的底边) #58bace #337ab7   #78a5f1(hover:#93b7f3)
+yellow: #febf53
+font:14px '\5FAE\8F6F\96C5\9ED1',Tahoma,Arial,Helvetica,sans-serif;
+灰色背景 ： #D9D9D9 #f8f8f8 #eee(layer) #f2f2f2(fly)
+#e1e1e1(列的灰色)
+黑色字体（比纯黑淡一点） ：#333
+green:#3c763d #5cb85c #21BA45 #69a047 #5FB878; #97CD8F #4abd72  #178a48---------------#61daa5(hover:#81e1b7)
+microsoft
+淡绿(note)：#d9f6ff
+warm: #fdedee;
+------------------------
+
+alert-success  background-color:#dff0d8
+alert-info  background-color:#d9edf7
+alert-warning  background-color:#fcf8e3
+alert-danger  background-color:#f2dede
+淡绿（安居客）：#62ab00
+
+简寻绿色 #1ab555
+简寻字体  "Helveticia neue",Arial,Tahoma,"Microsoft YaHei","微软雅黑","Hiragino Sans GB","冬青黑体",SimSun,"宋体",STHeiti,"华文黑体",sans-serif

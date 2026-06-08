@@ -1,0 +1,7 @@
+修改shell为可执行文件 chmod +x test2.sh
+
+chmod 751 file   给file的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执
+
+ 
+
+有可能没权限 chmod 777

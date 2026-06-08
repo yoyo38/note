@@ -1,0 +1,6 @@
+有时候会失灵的启动命令
+Copy 
+java -jar springboot-demo.jar --spring.profiles.active=test
+另一种启动命令(上一种启命令失效时, 用以下这种, 或就以这种)
+Copy 
+java -jar -Dspring.profiles.active=test springboot-demo.jar

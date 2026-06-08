@@ -1,0 +1,2 @@
+GRANT ALL ON oa_process_user_setting TO rdwtpgsq;
+grant all on sequence oa_process_user_setting_id_seq to rdwtpgsq;

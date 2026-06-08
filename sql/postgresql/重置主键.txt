@@ -1,0 +1,4 @@
+//清空表数据
+TRUNCATE student;
+//清空表数据，自增从1开始
+TRUNCATE student RESTART IDENTITY;

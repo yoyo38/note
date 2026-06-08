@@ -1,0 +1,42 @@
+cd /etc/sysconfig/network-scripts
+ls
+vi ifcfg-eth0
+
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="eth0"
+UUID="5ad13562-8da4-41b8-a369-f8a88df59a1d"
+DEVICE="eth0"
+ONBOOT="yes"
+IPADDR="192.168.2.95"
+PREFIX="24"
+GATEWAY="192.168.2.1"
+DNS1="192.168.2.1"
+IPV6_PRIVACY="no"
+
+-----------------
+ 方法：nmcli c reload +网卡名
+
+例：nmcli c reload ens160
+
+如果不行，可尝试以下命令
+
+# 重载所有ifcfg或route到connection（不会立即生效）
+nmcli c reload  ifcfg-xxx
+# 重载指定ifcfg或route到connection（不会立即生效）
+nmcli c load /etc/sysconfig/network-scripts/ifcfg-ethX
+nmcli c load /etc/sysconfig/network-scripts/route-ethX
+# 立即生效connection，有3种方法
+nmcli c up ethX
+nmcli d reapply ethX
+nmcli d connect ethX

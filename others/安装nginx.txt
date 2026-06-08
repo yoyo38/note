@@ -1,0 +1,41 @@
+https://www.cnblogs.com/xingyunblog/p/9066865.html
+
+1.安装依赖包
+
+//一键安装上面四个依赖
+yum -y install gcc gcc-c++ make libtool zlib zlib-devel openssl openssl-devel pcre pcre-devel
+2.下载并解压安装包
+
+//创建一个文件夹
+cd /usr/local
+mkdir nginx
+cd nginx
+//下载tar包
+wget http://nginx.org/download/nginx-1.13.7.tar.gz
+tar -xvf nginx-1.13.7.tar.g
+3.安装nginx
+
+//进入nginx目录
+cd /usr/local/nginx
+//执行命令
+./configure --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/nginx.conf  
+//执行make命令
+make
+//执行make install命令
+make install
+4.配置nginx.conf
+
+# 打开配置文件
+ls
+
+vi /usr/local/nginx/conf/nginx.conf
+
+
+Nginx: [error] open() ＂/usr/local/Nginx/logs/Nginx.pid" failed（2:No such file or directory）
+解决方法：
+
+/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+
+————————————————
+版权声明：本文为CSDN博主「大蛇王」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/t8116189520/article/details/81909574

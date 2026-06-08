@@ -1,0 +1,132 @@
+ 如何在 SQL Server中 将日期格式化
+
+CONVERT SQL Server中　将日期格式化2008年12月22日 星期一 16:39CONVERT
+      将某种数据类型的表达式显式转换为另一种数据类型。由于某些需求经常用到取日期格式的不同.现以下可在
+      SQL Server中　将日期格式化.
+      SQL Server 支持使用科威特算法的阿拉伯样式中的数据格式。
+      在表中，左侧的两列表示将 datetime 或 smalldatetime 转换为字符数据的 style 值。给 style 值加
+      100，可获得包括世纪数位的四位年份 (yyyy)。
+      不带世纪数位 (yy) 带世纪数位 (yyyy)
+      标准
+      输入/输出**
+      - 0 或 100 (*) 默认值 mon dd yyyy hh:miAM（或 PM）
+      1 101 美国 mm/dd/yyyy
+      2 102 ANSI yy.mm.dd
+      3 103 英国/法国 dd/mm/yy
+      4 104 德国 dd.mm.yy
+      5 105 意大利 dd-mm-yy
+      6 106 - dd mon yy
+      7 107 - mon dd, yy
+      8 108 - hh:mm:ss
+      - 9 或 109 (*) 默认值 + 毫秒 mon dd yyyy hh:mi:ss:mmmAM（或 PM）
+      10 110 美国 mm-dd-yy
+      11 111 日本 yy/mm/dd
+      12 112 ISO yymmdd
+      - 13 或 113 (*) 欧洲默认值 + 毫秒 dd mon yyyy hh:mm:ss:mmm(24h)
+      14 114 - hh:mi:ss:mmm(24h)
+      - 20 或 120 (*) ODBC 规范 yyyy-mm-dd hh:mm:ss[.fff]
+      - 21 或 121 (*) ODBC 规范（带毫秒） yyyy-mm-dd hh:mm:ss[.fff]
+      - 126(***) ISO8601 yyyy-mm-dd Thh:mm:ss:mmm（不含空格）
+      - 130* 科威特 dd mon yyyy hh:mi:ss:mmmAM
+      - 131* 科威特 dd/mm/yy hh:mi:ss:mmmAM
+      *    默认值（style 0 或 100、9 或 109、13 或 113、20 或 120、21 或 121）始终返回世纪数位 (yyyy)。
+      ** 当转换为 datetime 时输入；当转换为字符数据时输出。
+      *** 专门用于 XML。对于从 datetime 或 smalldatetime 到 character 数据的转换，输出格式如表中所示。对于从
+      float、money 或 smallmoney 到 character 数据的转换，输出等同于 style 2。对于从 real 到
+      character 数据的转换，输出等同于 style 1。
+      重要 默认情况下，SQL Server 根据截止年份 2049 解释两位数字的年份。即，两位数字的年份 49 被解释为 2049，而两位数字的年份
+      50 被解释为 1950。许多客户端应用程序（例如那些基于 OLE 自动化对象的客户端应用程序）都使用 2030 作为截止年份。SQL Server
+      提供一个配置选项（"两位数字的截止年份"），借以更改 SQL Server
+      所使用的截止年份并对日期进行一致性处理。然而最安全的办法是指定四位数字年份。
+      当从 smalldatetime 转换为字符数据时，包含秒或毫秒的样式将在这些位置上显示零。当从 datetime 或 smalldatetime
+      值进行转换时，可以通过使用适当的 char 或 varchar 数据类型长度来截断不需要的日期部分。
+      下表显示了从 float 或 real 转换为字符数据时的 style 值。
+      值 输出
+      0（默认值） 最大为 6 位数。根据需要使用科学记数法。
+      1 始终为 8 位值。始终使用科学记数法。
+      2 始终为 16 位值。始终使用科学记数法。
+      在下表中，左列表示从 money 或 smallmoney 转换为字符数据时的 style 值。
+      值 输出
+      0（默认值） 小数点左侧每三位数字之间不以逗号分隔，小数点右侧取两位数，例如 4235.98。
+      1 小数点左侧每三位数字之间以逗号分隔，小数点右侧取两位数，例如 3,510.92。
+      2 小数点左侧每三位数字之间不以逗号分隔，小数点右侧取四位数，例如 4235.9819。
+
+ 
+
+ 
+
+      select CONVERT(varchar, getdate(), 120 )
+      2004-09-12 11:06:08
+      select replace(replace(replace(CONVERT(varchar, getdate(), 120
+      ),\'-\',\'\'),\' \',\'\'),\':\',\'\')
+      20040912110608
+      select CONVERT(varchar(12) , getdate(), 111 )
+      2004/09/12
+      select CONVERT(varchar(12) , getdate(), 112 )
+      20040912
+      select CONVERT(varchar(12) , getdate(), 102 )
+      2004.09.12
+      select CONVERT(varchar(12) , getdate(), 101 )
+      09/12/2004
+      select CONVERT(varchar(12) , getdate(), 103 )
+      12/09/2004
+      select CONVERT(varchar(12) , getdate(), 104 )
+      12.09.2004
+      select CONVERT(varchar(12) , getdate(), 105 )
+      12-09-2004
+      select CONVERT(varchar(12) , getdate(), 106 )
+      12 09 2004
+      select CONVERT(varchar(12) , getdate(), 107 )
+      09 12, 2004
+      select CONVERT(varchar(12) , getdate(), 108 )
+      11:06:08
+      select CONVERT(varchar(12) , getdate(), 109 )
+      09 12 2004 1
+      select CONVERT(varchar(12) , getdate(), 110 )
+      09-12-2004
+      select CONVERT(varchar(12) , getdate(), 113 )
+      12 09 2004 1
+      select CONVERT(varchar(12) , getdate(), 114 )
+      11:06:08.177
+      SELECT CONVERT(varchar(100), GETDATE(), 0): 05 16 2006 10:57AM
+      SELECT CONVERT(varchar(100), GETDATE(), 1): 05/16/06
+      SELECT CONVERT(varchar(100), GETDATE(), 2): 06.05.16
+      SELECT CONVERT(varchar(100), GETDATE(), 3): 16/05/06
+      SELECT CONVERT(varchar(100), GETDATE(), 4): 16.05.06
+      SELECT CONVERT(varchar(100), GETDATE(), 5): 16-05-06
+      SELECT CONVERT(varchar(100), GETDATE(), 6): 16 05 06
+      SELECT CONVERT(varchar(100), GETDATE(), 7): 05 16, 06
+      SELECT CONVERT(varchar(100), GETDATE(), 8): 10:57:46
+      SELECT CONVERT(varchar(100), GETDATE(), 9): 05 16 2006 10:57:46:827AM
+      SELECT CONVERT(varchar(100), GETDATE(), 10): 05-16-06
+      SELECT CONVERT(varchar(100), GETDATE(), 11): 06/05/16
+      SELECT CONVERT(varchar(100), GETDATE(), 12): 060516
+      SELECT CONVERT(varchar(100), GETDATE(), 13): 16 05 2006 10:57:46:937
+      SELECT CONVERT(varchar(100), GETDATE(), 14): 10:57:46:967
+      SELECT CONVERT(varchar(100), GETDATE(), 20): 2006-05-16 10:57:47
+      SELECT CONVERT(varchar(100), GETDATE(), 21): 2006-05-16 10:57:47.157
+      SELECT CONVERT(varchar(100), GETDATE(), 22): 05/16/06 10:57:47 AM
+      SELECT CONVERT(varchar(100), GETDATE(), 23): 2006-05-16
+      SELECT CONVERT(varchar(100), GETDATE(), 24): 10:57:47
+      SELECT CONVERT(varchar(100), GETDATE(), 25): 2006-05-16 10:57:47.250
+      SELECT CONVERT(varchar(100), GETDATE(), 100): 05 16 2006 10:57AM
+      SELECT CONVERT(varchar(100), GETDATE(), 101): 05/16/2006
+      SELECT CONVERT(varchar(100), GETDATE(), 102): 2006.05.16
+      SELECT CONVERT(varchar(100), GETDATE(), 103): 16/05/2006
+      SELECT CONVERT(varchar(100), GETDATE(), 104): 16.05.2006
+      SELECT CONVERT(varchar(100), GETDATE(), 105): 16-05-2006
+      SELECT CONVERT(varchar(100), GETDATE(), 106): 16 05 2006
+      SELECT CONVERT(varchar(100), GETDATE(), 107): 05 16, 2006
+      SELECT CONVERT(varchar(100), GETDATE(), 108): 10:57:49
+      SELECT CONVERT(varchar(100), GETDATE(), 109): 05 16 2006 10:57:49:437AM
+      SELECT CONVERT(varchar(100), GETDATE(), 110): 05-16-2006
+      SELECT CONVERT(varchar(100), GETDATE(), 111): 2006/05/16
+      SELECT CONVERT(varchar(100), GETDATE(), 112): 20060516
+      SELECT CONVERT(varchar(100), GETDATE(), 113): 16 05 2006 10:57:49:513
+      SELECT CONVERT(varchar(100), GETDATE(), 114): 10:57:49:547
+      SELECT CONVERT(varchar(100), GETDATE(), 120): 2006-05-16 10:57:49
+      SELECT CONVERT(varchar(100), GETDATE(), 121): 2006-05-16 10:57:49.700
+      SELECT CONVERT(varchar(100), GETDATE(), 126): 2006-05-16T10:57:49.827
+      SELECT CONVERT(varchar(100), GETDATE(), 130): 18 ???? ?????? 1427
+      10:57:49:907AM
+      SELECT CONVERT(varchar(100), GETDATE(), 131): 18/04/1427 10:57:49:920AM

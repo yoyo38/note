@@ -1,0 +1,38 @@
+提供一个一致的接口（界面类）,用以屏蔽内容子系统的细节，使得调用端只需跟这个接口发生调用 ，无需关心这个子系统的内部细节。
+
+外观类（Facade） 为调用端提供统一的调用接口
+调用者（client）
+子系统的集合： 功能的实际提供者
+
+public class HomeTheaterFacade{
+    //定义各个子系统对象
+    private TheaterLight theaterLight;
+    private Popcorn
+    private Stereo
+    private Projector
+    private Screen
+
+    public HomeTheaterFacade(){
+	
+    }
+
+    public void ready(){
+	popcorn.on();
+	popcorn.pop();
+	screen.down();
+	projector.on();
+	dvdPlayer.on();
+    }
+
+    public void play(){
+	
+    }
+
+	public void pause(){
+
+	}
+
+}
+
+
+

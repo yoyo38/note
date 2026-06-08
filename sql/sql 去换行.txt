@@ -1,0 +1,1 @@
+REPLACE(Image4,char(13)+CHAR(10),'')

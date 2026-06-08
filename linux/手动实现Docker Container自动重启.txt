@@ -1,0 +1,40 @@
+https://johnniang.me/archives/2019090414074779570
+
+#!/bin/sh
+if [ $# != 2 ]
+then
+    echo "Please input a filename(fullpath) and a command to be executed when the file changes"
+    exit 1
+fi
+filename=$1
+if [ ! -f "$1" ]
+then
+    echo "File [$1] was not found"
+    exit 1
+fi
+lastModified=$(ls -l $filename)
+echo "Last modifiled: $lastModified"
+while :
+do
+    modified=$(ls -l $filename)
+    if [ "$lastModified" != "$modified" ]
+    then
+        echo "File was changed"
+        echo "Executing $2"
+        echo "Restaring docker container"
+        $2 # execute the command
+        lastModified=$modified
+    fi
+    echo "File last modifiled: $lastModified"
+    date
+    echo "Sleep 10s"
+    sleep 10
+done
+
+
+
+将上述脚本保存为 monitor.sh。
+
+// 参数1: 文件名（全路径）
+// 参数2: 当文件上传后，需要执行的命令
+nohup ./monitor.sh `pwd`/api.jar "docker restart api-dev" >/dev/null 2>&1&

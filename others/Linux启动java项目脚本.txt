@@ -1,0 +1,47 @@
+#!/bin/bash
+PROJECTNAME=halo-1.1.1
+pid=`ps -ef |grep $PROJECTNAME |grep -v "grep" |awk '{print $2}'`
+
+if [ $pid ];then
+   echo "$PROJECTNAME is running and pid=$pid"
+else
+   echo "Start success to start $PROJECTNAME ..."
+
+   nohup java -jar halo-1.1.1.jar >> catalina.out 2>&1 &
+
+fi
+
+作者：霜花似雪
+链接：http://www.imooc.com/article/78990
+来源：慕课网
+本文原创发布于慕课网 ，转载请注明出处，谢谢合作
+
+#!/bin/bash
+  
+PROJECTNAME=halo-1.1.1
+pid=`ps -ef | grep $PROJECTNAME |grep -v "grep" |awk '{print $2}'`
+if [ $pid ];then
+   echo "$PROJECTNAME is running and pid=$pid"
+   kill -9 $pid
+   if [[ $? -eq 0 ]];then
+      echo "success to stop $PROJECTNAME "
+   else
+      echo "fail to stop $PROJECTNAME "
+   fi
+fi
+
+作者：霜花似雪
+链接：http://www.imooc.com/article/78990
+来源：慕课网
+本文原创发布于慕课网 ，转载请注明出处，谢谢合作
+
+4.在start.sh和stop.sh脚本文件编写完成之后，可能会权限不足，执行以下命令即可：
+chmod u+wrx start.sh
+chmod u+wrx stop.sh
+5.在同一目录下启动服务，执行命令：./start.sh即可
+6.在同一目录下停止服务，执行命令：./stop.sh 即可
+7.查看启动日志：tail -f catalina.out
+作者：霜花似雪
+链接：http://www.imooc.com/article/78990
+来源：慕课网
+本文原创发布于慕课网 ，转载请注明出处，谢谢合作

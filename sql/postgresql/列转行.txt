@@ -1,0 +1,3 @@
+select u.account,string_agg (r."name", ',') from sys_user u inner join sys_user_role ur on u.user_id=ur.user_id
+inner join sys_role r on ur.role_id=r.role_id
+group by u.account

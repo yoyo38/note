@@ -1,0 +1,78 @@
+Headers
+# This is an h1 tag
+## This is an h2 tag
+### h3 tag
+#### h4 tag
+###### This is an h6 tag
+
+Emphasis  
+*This text will be italic*  
+_This will also be italic_
+
+**This text will be bold**  
+__This will also be bold__  
+
+_You **can** combine them_  
+
+**这是加粗的文字**  
+*这是倾斜的文字*  
+***这是斜体加粗的文字***  
+~~这是加删除线的文字~~  
+>这是引用的内容  
+>>这是引用的内容  
+>>>>>>>>>>这是引用的内容  
+
+---  
+----  
+***  
+*****  
+![图片alt](图片地址 ''图片title'')  
+![blockchain](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=702257389,1274025419&fm=27&gp=0.jpg "区块链")  
+
+[超链接名](超链接地址 "超链接title")  
+或者
+<链接地址>
+title可加可不加  
+[简书](http://jianshu.com)  
+[百度](http://baidu.com)  
+
+
+无序列表使用星号(*)、加号(+)或是减号(-)作为列表标记
+- 列表内容  
+   - abc  
++ 列表内容  
+   1. 子列表  
+* 列表内容
+
+有序列表使用数字并加上 . 号来表示
+1. 列表内容
+2. 列表内容
+3. 列表内容
+
+Markdown 区块引用是在段落开头使用 > 符号 ，然后后面紧跟一个空格符号：
+
+
+ `代码内容`  
+
+```
+function fun(){  
+         echo "这是一句非常牛逼的代码";  
+    }  
+    fun();  
+```  
+
+下划线可以通过 HTML 的 <u></u> 标签来实现：
+
+Markdown 制作表格使用 | 来分隔不同的单元格，使用 - 来分隔表头和其他行。
+
+语法格式如下：
+|  表头   | 表头  |
+|  ----  | ----  |
+| 单元格  | 单元格 |
+| 单元格  | 单元格 |
+
+
+
+Images  
+![GitHub Logo](/images/logo.png)  
+Format: ![Alt Text](url)

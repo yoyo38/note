@@ -1,0 +1,84 @@
+请求发送者和请求接收者之间解耦  
+调用者→命令→接受者
+//适合对行为进行记录、撤销或重做的场景
+
+public interface Command {
+    void execute();
+    void undo();
+}
+
+//ConcreteCommand
+public class LightOnCommand implements Command {
+    //持有 receiver
+    LightReceiver lightReceiver;
+    @Override
+    public void execute() {
+        lightReceiver.on();
+    }
+
+    @Override
+    public void undo() {
+        lightReceiver.off();
+    }
+}
+
+public class LightOffCommand implements Command {
+    //持有 receiver
+    LightReceiver lightReceiver;
+    @Override
+    public void execute() {
+        lightReceiver.off();
+    }
+
+    @Override
+    public void undo() {
+        lightReceiver.on();
+    }
+}
+public class NoCommand implements Command {
+    @Override
+    public void execute() {
+    }
+    @Override
+    public void undo() {
+    }
+}
+
+//请求的执行者 真正的命令执行对象  Receiver
+public class LightReceiver {
+    public void on(){
+        System.out.println(" light on");
+    }
+    public void off(){
+        System.out.println(" light off");
+    }
+}
+
+//遥控器  调用者  Invoker 使用命令对象的入口
+public class RemoteController {
+    // 持有一组命令
+    Command[] onCommands;
+    Command[] offCommands;
+
+    Command undoCommand;
+
+    //设置命令 通过构造器和 set方法
+
+    //发布命令
+    public void onButtonPushed(int no){
+
+    }
+}
+
+public class Client {
+    //创建接收者
+
+    //创建电灯的开关命令
+
+    //创建遥控器
+
+    //设置遥控器的按钮
+
+    //操作，发布命令
+
+}

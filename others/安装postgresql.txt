@@ -1,0 +1,29 @@
+yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+yum install postgresql11
+yum install postgresql11-server
+/usr/pgsql-11/bin/postgresql-11-setup initdb
+systemctl enable postgresql-11
+systemctl start postgresql-11
+
+-----------------------------
+安装 DNF 包管理器
+yum install epel-release -y
+yum install dnf
+----------------------------------------------
+centos8:
+dnf install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+dnf -qy module disable postgresql
+dnf install postgresql11-server
+/usr/pgsql-11/bin/postgresql-11-setup initdb
+systemctl enable postgresql-11
+systemctl start postgresql-11
+-------------------------------------
+
+修改 /var/lib/pgsql/11/data/postgresql.conf
+listen_addressed = '*'
+修改 /var/lib/pgsql/11/data/pg_hba.conf
+host all all 0.0.0.0/0 md5
+重启：
+systemctl restart postgresql-11
+sudo -u postgres psql
+ALTER USER postgres WITH PASSWORD ‘postgres’;

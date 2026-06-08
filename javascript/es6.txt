@@ -1,0 +1,2 @@
+Object.setPrototypeOf(obj, proto);
+Object.getPrototypeOf(obj)

@@ -1,0 +1,18 @@
+public abstract class OrganizationComponent{
+	public abstract void print();
+}
+
+public class University extends OrganizationComponent{
+      List<OrganizationComponent> organizations = new ArrayList<OrganizationComponent>();  //存放college
+}
+
+public class  College extends OrganizationComponent{
+      List<OrganizationComponent> organizations = new ArrayList<OrganizationComponent>();  //存放department
+}
+
+public class  Department extends OrganizationComponent{
+      
+}
+
+
+多个组件组合成一棵树，当调用OrganizationComponent 的 print方法时，同时调用子节点的print ，形成递归调用

@@ -1,0 +1,6 @@
+两种配置方法
+第一种
+1.在Filter类上加@WebFilter；
+
+第二种方式
+FilterRegistrationBean

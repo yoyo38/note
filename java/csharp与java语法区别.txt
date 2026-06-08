@@ -1,0 +1,131 @@
+ C#和Java在语法上的差异（原创，持续更新中）
+
+1.switch  C#一直支持String类型 Java直到1.7才支持
+
+2.C#里String有Length属性 Java里是Length方法
+
+3.C#中修饰class的sealed效果与Java的final相当（有待细细研究），Java没有sealed修饰符，C#没有final
+
+4.C#中的方法参数支持ref/out（引用传递），Java没有
+
+5.特别注意：在String对象中，C#里的"=="是比较值相等，和equals是等效的；而Java中"=="是表示引用相等,equals表示值相等
+复制代码
+
+//Java
+public static void main(String [] args) {
+    String s1 = "12";
+    String s2 = new String("12");
+    String s3 = "1";
+    String s4 = "2";
+    String s5 = s3 + s4;
+    String s6 = "1" + "2";
+
+    System.out.println(s1==s2);
+    System.out.println(s1==s5);
+}
+
+输出均为false
+
+复制代码
+复制代码
+
+//C#
+ static void Main(string[] args)
+        {
+            String s1 = "12";
+            String s3 = "1";
+            String s4 = "2";
+            String s5 = s3 + s4;
+            //String s6 = "1" + "2";
+            Console.Write(s1.Equals(s5));
+            Console.Write(s1==s5);
+        }
+输出均为true
+
+复制代码
+
+ 
+
+6.C#中的接口不能带有属性成员，而Java可以；在C#中显式地对接口方法使用public也是非法的，而Java却可以。
+
+7.C#中无法被继承的类：sealed类和static类，Java中是final类
+8.Java中String类有charat方法，C#没有
+
+System.out.println(s.charAt(5));
+
+ 
+9.Java中的泛型在编译过程中会被擦除类型，再被调用时才做类型的转换，这相对于C#中产生了新类型的泛型而言，是一种“伪泛型”
+10.C#中并没有HashMap，Java中没有Dictionary
+11.关于override，C#中必须是有vitual、abstract、override修饰的方法才可以被override，Java则没有此限制；此外，Java中可以省略 但基于@Override的对方法名检查作用以及代码的可读性考虑 我们一般会写上  而在C#中override是不可省略的
+12.在异常处理中，C# 没有throws的用法
+------------------------------------------------------------------------------------------------------
+
+由C#转入Java一段时间了，总结下个人认为的Java同C#语法之间的不同之处，有不同意见之处还望各位海涵
+刚学Java时觉得语法同C#大致是相同的(应该说C#同Java大致相同，毕竟人家微软的C#是有意模仿Java的语法习惯的)
+比尔.盖茨曾经说过：“Java是最卓越的程序设计语言”
+言归正传，下面探讨Java同C#的语法不同之处。。。
+1，命名空间与包
+C#为了把实现相似功能的类组织在一起，引入了命名空间的概念（namespace）
+Java中与此对应的东西叫做包（package）
+2，类的访问控制方面的不同
+C#只有两种：public和默认(同internal)
+public能被所有的类（同项目中和不同项目中）访问
+internal（在class关键字前不加控制符时默认为internal），表明类只能在同一项目中访问
+Java也只有两种：public和默认
+public能被所有的类访问
+默认（在class关键字前不加控制符时）只能被同一包中的所有类访问
+3，类成员的访问控制
+C#中有四种：public,protected,private（默认）,internal（注意这里internal和默认是不同的）
+public能被所有的类访问
+protected只能被子类访问
+private（也即不写任何控制符时的默认情况下）只能类内部访问
+internal能被同一项目中的类访问
+Java也有四种：public,protected,private和默认
+public能被所有的类访问
+protected既能被同一个中的其他类访问，也可以被不同包中的子类访问
+private只能在类内部使用
+默认可以被这个包中的其他类访问，如果一个子类与父类位于不同的包中，子类也不能访问父类中的默认访问控制成员
+4，C#中类的继承用通过冒号:实现，在Java中用extends
+C#中实现接口通过冒号:实现，在Java中用implements
+C#中密封类用sealed实现，在Java中用final
+C#中常数用const实现，在Java中用final
+C#中属性用set,get代码块实现，在Java中一般用类似于C#中的字段代表属性，或者用setter,getter构造器实现
+C#中有部分类（partial）的概念，Java中没有
+C#中有readonly修饰属性只读，Java中没有
+C#中有virtual和override修饰虚方法和重写方法，Java中没有，Java中默认父类中的方法都是virtual的
+Java中有static{},synchroized{}代码块的概念，C#中没有
+Java中有标签（如labelA:）的概念，C#中没有
+C#中子类调用父类的方法用base.method()，Java中用super.method()
+C#中用is来判断一个实例是否是某一个类的，Java中用instanceof
+C#中用foreach(int i in array)来对数组中每一个元素的遍历，Java中用for(int i : array) 
+
+---------------------------------------------------------------------------------------------------------------------
+1.c#中的命名空间是namespace类似于Java中的package（包），在Java中导入包用import而c#中用using。
+2.c#和Java都是从main函数入口的，但是c#中的main函数的首字母必须大写，它有四种写法如下：
+static void Main(string args[]){}
+static int Main(string args[]){}
+static void Main(){}
+static void Main(){}
+而Java中只有一种形式：static void main(String [] args){}
+3．数据类型：Java跟c#基本都差不多，但是Java的String类型的首字母必须大写，而c#中可以小写也可以大写，还有布尔型，Java中是boolean，c#中是bool。
+4．变量的命名：Java中可以用$符号，而c#中不可以使用。
+5．注释：Java比c#少一种"///"的文档注释。
+6．输出：c#有三种方式输出：Cosole.WriteLine(); Cosole.WriteLine(要输出的值); Cosole.WriteLine("格式字符串"，变量列表); 前两种的用法与Java中的ystem.out.println()方法的用法相同，第三种方式是根据占位符输出的，比Java更方便了。
+7．控制流语句：c#跟Java类似,还有c#中的switch如果case后面有内容必须要有break;Java可以没有break；
+8．数组：两种语言的声明都是用new关键字的。都可以在创建数组的同时初始化如：int a[]={1,2,3,5,5};但是c#比Java多两种初始化如：int a[]=new int[3]{1,2,3}; int a[]=new int[]{1,2,3};
+9．方法中传递的参数：两种语言都使用值传递与引用传递。
+C#的引用传递的关键字是ref与out，ref侧重于修改，out侧重于输出。而Java中都以传值方式;
+10．访问修饰符：C#中的访问修饰符与Java中的基本对应，但多出了一个internal。简而言之，C#有5种类型的可访问性，如下所示：
+public：成员可以从任何代码访问。 protected：成员只能从派生类访问。
+internal：成员只能从同一程序集的内部访问。
+protected：成员只能从同一程序集内的派生类访问。
+private：成员只能在当前类的内部访问。
+11．由于C#中不存在final关键词，如果想要某个类不再被派生，你可以使用sealed关键词密封。
+12．集合：两种语言都有集合ArrayList，还有通过键访问值的Java中是HashMap而c#中是HashTable。c#比Java多泛型集合List<T>与Dictionary<K,V>更容易了，无需拆箱装箱了，更安全了。
+13．继承：Java中用关键字extends，c#只用"："就行了.调用父类的构造方法Java用super关键字，而c#用base关键字。
+14．多态：抽象类和抽象方法两种语言都用abstract关键字。Java中另外一个类如果继承了它，实现直接重写此方法就可以了；而c#必须加上关键字override实现。C#还比Java多一种虚方法来实现多态。
+15．接口：都用关键字interface定义，Java实现用关键字implements；c#用"："实现。在C#中，接口内的所有方法默认都是公用方法。在Java中，方法声明可以带有public修饰符（即使这并非必要），但在C#中，显式为接口的方法指定public修饰符是非法的。
+16．C#中的is操作符与Java中的instanceof操作符一样，两者都可以用来测试某个对象的实例是否属于特定的类型。在Java中没有与C#中的as操作符等价的操作符。as操作符与is操作符非常相似，但它更富有"进取心"：如果类型正确的话，as操作符会尝试把被测试的对象引用转换成目标类型；否则，它把变量引用设置成null。
+17．枚举器即enum类型(java无),把它作为一个变量值的类型使用，从而把变量可能的取值范围限制为枚举器中出现的值。
+18．结构（Struct）与类很相似,而结构是一种值类型，它存储在栈中或者是嵌入式的,结构可以实现接口，可以象类一样拥有成员，但结构不支持继承。
+19．c#保留了指针。Unsafe。(C#使用指针不安全,最后这条有待考证)

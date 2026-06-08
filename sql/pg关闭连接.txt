@@ -1,0 +1,9 @@
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE datname='hebs_sys' AND pid<>pg_backend_pid();
+
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE datname='farm_oa' AND pid<>pg_backend_pid();
+DROP database farm_oa;
+create DATABASE farm_oa;

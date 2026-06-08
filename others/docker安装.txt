@@ -1,0 +1,64 @@
+# 1、yum 包更新到最新 
+yum update
+# 2、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的 
+yum install -y yum-utils device-mapper-persistent-data lvm2
+# 3、 设置yum源
+yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 
+# 4、 安装docker，出现输入的界面都按 y 
+yum install -y docker-ce   yum install -y docker-ce --nobest
+# 5、 查看docker版本，验证是否验证成功
+docker -v
+sudo systemctl enable docker
+
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://1pxcgr3f.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
+vi  /etc/docker/daemon.json
+
+#添加后：
+{
+    "registry-mirrors": ["https://registry.docker-cn.com"],
+    "live-restore": true
+}
+重新启动docker
+
+systemctl restart docker
+输入docker version 返回版本信息则安装正常。
+
+
+
+
+
+
+
+
+
+
+
+
+1、Docker要求CentOS系统的内核版本高于 3.10 ，通过 uname -r 命令查看你当前的内核版本是否支持安账docker
+
+　　2、更新yum包：sudo yum update
+
+　　3、安装需要的软件包，yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
+
+　　　　sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+4.设置yum源
+sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+（4）安装docker
+
+sudo yum install docker-ce
+（5）安装后查看docker版本
+
+docker -v
+
+vi /etc/docker/daemon.json
+{
+    "registry-mirrors":["https://docker.mirrors.ustc.edu.cn"]
+}

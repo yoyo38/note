@@ -1,0 +1,4 @@
+@Configuration  : 只会返回同一个Bean
+@Component  : new 多次会返回多个Bean
+
+@Configuration是随容器启动开始加载的,始终存在的单例模式。 @Component是使用一次即实例化一次

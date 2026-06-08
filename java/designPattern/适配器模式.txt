@@ -1,0 +1,66 @@
+1. MediaAdater 和 AudioPlayer 共同实现 MediaPlayer接口
+2. AudioPlayer持有MediaAdater对象
+3. MediaAdater 持有AdvancedMediaPlayer 对象 （组合）
+4. Mp4Player 和VlcPlayer 实现AdvancedMediaPlayer 接口
+
+AudioPlayer 想实现 AdvancedMediaPlayer的功能，无法实现，需要通过适配器实现
+
+类适配器： VoltageAdapter extends Voltage220V implements IVoltage5V
+对角适配器：VoltageAdapter implements IVoltage5V {
+	private Voltage220V voltage220v; //持有220v对象 （被适配对象）
+}
+接口适配器模式：
+
+//要适配的万能接口
+public interface DCOutput {
+    int output5V();
+    int output9V();
+    int output12V();
+    int output24V();
+}
+
+//万能适配器 ，只有抽象的默认实现
+public abstract class PowerAdapter implements DCOutput{
+    protected AC220 mAC220; //持有220v对象 （被适配对象）
+
+    public PowerAdapter(AC220 ac220){
+        this.mAC220 = ac220;
+    }
+
+    @Override
+    public int output5V() {
+        return mAC220.output220V();
+    }
+
+    @Override
+    public int output9V() {
+        return mAC220.output220V();
+    }
+
+    @Override
+    public int output12V() {
+        return mAC220.output220V();
+    }
+
+    @Override
+    public int output24V() {
+        return mAC220.output220V();
+    }
+}
+
+//我们要用的是5V的电压，所以关心5V的适配
+public class Power5VAdapter extends PowerAdapter {
+
+    public Power5VAdapter(AC220 ac220) {
+        super(ac220);
+    }
+
+    @Override
+    public int output5V() {
+        int output = 0;
+        if (mAC220 != null) {
+            output = mAC220.output220V() / 44;
+        }
+        return output;
+    }
+}

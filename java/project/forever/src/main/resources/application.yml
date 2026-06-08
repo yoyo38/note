@@ -1,0 +1,31 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.2.199:5432/farm_iot?currentSchema=public
+    username: postgres
+    password: postgres
+    filters: wall,mergeStat
+
+# 作为客户端请求的服务端地址
+netty:
+  tcp:
+    server:
+      # 作为客户端请求的服务端地址
+      host: 127.0.0.1
+      # 作为客户端请求的服务端端口
+      port: 9090
+    client:
+      # 作为服务端开放给客户端的端口
+      port: 9090
+dept:
+  id: 1
+client:
+  id: yg01
+mybatis-plus:
+  typeAliasesPackage: cn.holdmoral.forever.entity
+  global-config:
+    banner: false
+    db-config:
+      select-strategy: not_empty

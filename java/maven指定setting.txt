@@ -1,0 +1,1 @@
+mvn clean install -s /var/lib/jenkins/ccpmaven/settings.xml  -Dmaven.repo.local=/var/lib/jenkins/ccpmaven

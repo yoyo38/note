@@ -1,0 +1,67 @@
+例如：将系统日期设定成2009年11月3日的命令
+
+命令 ： "date -s 11/03/2009"
+
+将系统时间设定成下午5点55分55秒的命令
+
+命令 ： "date -s 17:55:55"
+
+ 
+
+date
+
+显示当前时间 Fri Aug  3 14:15:16 CST 2007
+
+ 
+
+date -s 
+
+按字符串方式修改时间
+
+可以只修改日期,不修改时间,输入: date -s 2007-08-03
+
+只修改时间,输入:date -s 14:15:00
+
+同时修改日期时间,注意要加双引号,日期与时间之间有一空格,输入:date -s "2007-08-03 14:15:00"
+
+ 
+
+修改完后,需要的话可以输入:clock -w 
+
+把系统时间写入CMOS
+
+3. 将当前时间和日期写入BIOS，避免重启后失效
+
+命令 ： "hwclock -w"
+
+2、hwclock/clock
+查看硬件时间
+
+# hwclock --show
+
+或者 # clock --show
+
+设置硬件时间
+
+# hwclock --set --date="07/07/06 10:19" （月/日/年 时:分:秒）
+
+或者 # clock --set --date="07/07/06 10:19" （月/日/年 时:分:秒）
+
+3、硬件时间和系统时间的同步
+按照前面的说法，重新启动系统，硬件时间会读取系统时间，实现同步，但是在不重新启动的时候，需要用hwclock或clock命令实现同步。
+
+硬件时钟与系统时钟同步：
+
+# hwclock --hctosys（hc代表硬件时间，sys代表系统时间）
+
+或者
+
+# clock --hctosys
+
+系统时钟和硬件时钟同步： # hwclock --systohc 或者 # clock --systohc
+
+针对中国时区，修改操作如下
+1.   修改文件 /etc/sysconfig/clock内容：
+ZONE=Asia/Shanghai UTC=false ARC=false
+2.     rm /etc/localtime
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime

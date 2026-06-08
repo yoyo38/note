@@ -1,0 +1,25 @@
+tar -zxvf nacos-server-1.2.1.tar.gz
+cd nacos/bin
+sh startup.sh -m standalone
+firewall-cmd --zone=public --add-port=8848/tcp --permanent
+firewall-cmd --reload
+
+vim /lib/systemd/system/nacos.service
+---------------
+[Unit]
+Description=nacos
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/nacos/bin/startup.sh -m standalone
+ExecReload=/usr/local/nacos/bin/shutdown.sh
+ExecStop=/usr/local/nacos/bin/shutdown.sh
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+-------------------
+systemctl daemon-reload
+systemctl enable nacos.service
+systemctl start nacos.service

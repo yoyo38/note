@@ -1,0 +1,9 @@
+pg_dump -h 192.168.2.192 -p 5432 -U postgres -c -f db_back_sys.sql farmsys
+
+psql -h 127.0.0.1 -p 5432 -U postgres -f /usr/local/jenkins/hebs/hebs-sys/db_back_sys.sql farmsys
+
+pg_dump -h 192.168.2.182 -p 5432 -U postgres -c -f db_back_fb.sql farmbase
+psql -h 127.0.0.1 -p 5432 -U postgres -f /usr/local/jenkins/hebs/hebs-sys/db_back_fb.sql farmbase
+
+pg_dump -h 192.168.2.184 -p 5432 -U postgres -c -f db_back_work.sql farmwork
+psql -h 127.0.0.1 -p 5432 -U postgres -f /usr/local/jenkins/hebs/hebs-sys/db_back_work.sql farmwork

@@ -1,0 +1,202 @@
+﻿1.进入目录
+
+cd /usr/local
+
+2.下载5.0.3
+
+wget http://download.redis.io/releases/redis-5.0.8.tar.gz
+
+3.解压到当前目录
+
+tar -xvzf redis-5.0.8.tar.gz
+
+4.删除压缩包
+
+rm redis-5.0.8.tar.gz
+
+5.进入解压出来的目录
+
+cd redis-5.0.8
+
+yum -y install gcc automake autoconf libtool make
+6.编译源码
+
+make
+
+7.修改配置文件
+
+vi redis.conf
+
+8.修改以下配置
+ 
+
+a.远程访问需要把bind注释掉
+  bind 127.0.0.1 修改为 # bind 127.0.0.1
+b.默认启动时为后台启动
+  daemonize yes
+c.设置密码，找到
+ # requirepass foobared 字符
+ 修改为
+ requirepass password
+
+9.进入 src 文件夹以配置文件的形式启动项目
+
+cd src
+./redis-server ../redis.conf
+
+10.查看是否启动成功，如果有 6379 端口的服务代表启动成功
+
+netstat -nlpt
+
+11.打开客户端
+
+./redis-cli
+# 进入客户端交互模式后输入
+auth password
+
+12.测试是否可用
+ 
+
+set test test
+get test
+
+13.设置redis 开机自启动
+    a.在/etc目录下新建redis目录
+    
+
+cd /etc
+mkdir redis
+
+    b.将/usr/local/redis-5.0.3/redis.conf 文件复制一份到/etc/redis目录下，并命名为6379.conf
+  
+
+cp /usr/local/redis-5.0.8/redis.conf /etc/redis/6379.conf
+
+    c.将redis的启动脚本复制一份放到/etc/init.d目录下
+    
+修改/usr/local/redis-5.0.8/utils/redis_init_script
+将
+EXEC=/usr/local/bin/redis-server
+CLIEXEC=/usr/local/bin/redis-cli
+修改为
+EXEC=/usr/local/redis-5.0.8/src/redis-server
+CLIEXEC=/usr/local/redis-5.0.8/src/redis-cli
+cp /usr/local/redis-5.0.8/utils/redis_init_script /etc/init.d/redisd
+
+    d.切换到/etc/init.d目录下 然后执行自启命令
+    
+
+cd /etc/init.d/
+chkconfig redisd on
+
+    看结果是否支持chkconfig 如果报service redisd does not support chkconfig 错误 则修改redisd 文件
+    vi redisd 在第一行加入如下两行注释，保存退出
+    
+
+# chkconfig:   2345 90 10
+# description:  Redis is a persistent key-value database
+
+    e.启动 关闭 redis
+/etc/init.d/redisd start
+/etc/init.d/redisd stop
+
+f 配置文件 也在  /etc/redis/6379.conf
+
+service redisd start
+service redisd stop
+
+
+
+    如果stop失败 报
+    
+
+(error) NOAUTH Authentication required.
+     Waiting for Redis to shutdown ...
+     Waiting for Redis to shutdown ...
+     Waiting for Redis to shutdown ...
+
+    修改启动脚本 关闭时的密码
+    
+
+vi redisd
+将 $CLIEXEC -p $REDISPORT shutdown 修改为
+$CLIEXEC -a "password" -p $REDISPORT shutdown
+
+    如果stop失败 报
+    
+
+/usr/local/bin/redis-cli: No such file or directory
+
+    需要修改启动脚本 资源包路径
+    
+
+将
+EXEC=/usr/local/bin/redis-server
+CLIEXEC=/usr/local/bin/redis-cli
+修改为
+EXEC=/usr/local/redis-5.0.3/src/redis-server
+CLIEXEC=/usr/local/redis-5.0.3/src/redis-cli
+
+
+14 防火墙
+firewall-cmd --zone=public --add-port=6379/tcp --permanent
+firewall-cmd --zone=public --add-port=16379/tcp --permanent
+firewall-cmd --reload
+
+redis-cli --cluster create 192.168.2.93:6379 192.168.2.94:6379 192.168.2.187:6379 192.168.2.188:6379 192.168.2.197:6379 192.168.2.198:6379 --cluster-replicas 1 -a yXNk&Yk7STnY^4t6Vbp7qRPbi0zXiqGb
+————————————————
+----------------------------------------ubuntu redis start auto----------------------
+使用启动脚本 redis_init_script，这个文件位于redis安装包utils文件夹下。
+
+建议： 如果比较熟悉shell脚本，可以打开这个文件，看一下里面的内容，对后期排查错误有很大的帮助。比如，文件里定义了redis的相关安装路径及文件命名等。
+
+步骤一
+把安装包下 redis.conf 配置文件复制到**/etc/redis**下，命名为：端口号.conf
+
+sudo cp redis.conf /etc/redis/6379.conf
+1
+步骤二
+将启动脚本复制到/etc/init.d目录下，本例将启动脚本命名为redisd（通常都以d结尾表示是后台自启动服务）
+
+sudo cp redis_init_script /etc/init.d/redisd
+1
+步骤三
+使用 sysv-rc-conf服务管理工具将redisd服务的运行级别改为2,3,4,5。
+
+扩展：
+
+Ubuntu 中 chkconfig 已经被 sysv-rc-conf 所替代
+使用 chkconfig 把服务加到开机自动启动列表里，开机就能自启动了，但是chkconfig 是Redhat下的程序；
+而在Ubuntu下有一个更好的程序可以完美“替代”chkconfig，那就是sysv-rc-conf。
+
+如果服务器上没有这个工具，先安装 sysv-rc-conf 工具，然后进行设置：
+
+sudo apt-get install sysv-rc-conf
+
+--------------Unable to locate package sysv-rc-conf----------------
+vim /etc/apt/sources.list
+末尾加 deb http://archive.ubuntu.com/ubuntu/ trusty main universe restricted multiverse
+执行 sudo apt-get update
+sudo apt-get install sysv-rc-conf
+
+----------------------------------------
+1
+安装好，打开运行：
+
+sudo sysv-rc-conf
+1
+即进入服务管理界面。
+
+然后将redisd的2,3,4,5级别全部选中，q键退出
+
+步骤四
+打开服务
+
+service redisd start
+1
+关闭服务
+
+service redisd stop
+————————————————
+版权声明：本文为CSDN博主「拾年一剑」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/u014163312/article/details/123650944

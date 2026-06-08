@@ -1,0 +1,3 @@
+https://www.bilibili.com/medialist/detail/ml457478326
+
+新版弃用ViewModelProviders.of()，推荐使用myViewModel = new ViewModelProvider(this).get(MyViewModel.class);

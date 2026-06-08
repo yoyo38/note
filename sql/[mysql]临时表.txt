@@ -1,0 +1,13 @@
+定义字段：
+1
+	CREATE TEMPORARY TABLE tmp_table (
+2
+	    name VARCHAR(10) NOT NULL,
+3
+	    value INTEGER NOT NULL
+4
+	)
+
+2)直接将查询结果导入临时表
+1
+	CREATE TEMPORARY TABLE tmp_table SELECT * FROM table_name

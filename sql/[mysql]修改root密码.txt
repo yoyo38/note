@@ -1,0 +1,5 @@
+# 登录mysql，执行如下sql语句，括号内为新密码
+mysql> use mysql
+mysql> update user set authentication_string=password('HEpan693640.') where user='root';
+mysql> flush privileges;
+mysql> quit

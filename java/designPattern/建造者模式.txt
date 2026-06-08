@@ -1,0 +1,50 @@
+将各个部位依次组装在一起，最后返回
+三要素：Director监工, Builder，具体Builder
+
+public abstract class Builder {
+ 
+    abstract void buildBoard(String board);
+    abstract void buildDisplay(String display);
+    abstract void buildOs();
+    abstract Computer build();
+ 
+}
+
+public class MacBookBuilder extends Builder {
+ 
+    private Computer mComputer=new MacBook();
+    @Override
+    void buildBoard(String board) {
+        mComputer.setBoard(board);
+    }
+ 
+    @Override
+    void buildDisplay(String display) {
+        mComputer.setDisplay(display);
+    }
+ 
+    @Override
+    void buildOs() {
+        mComputer.setOs();
+    }
+ 
+    @Override
+    Computer build() {
+        return mComputer;
+    }
+}
+
+//builder 的操纵者
+public class Director {
+    Builder mBuilser=null;
+ 
+    public Director(Builder builer) {
+        this.mBuilser = builer;
+    }
+ 
+    public void construct(String board,String display){
+        mBuilser.buildDisplay(display);
+        mBuilser.buildBoard(board);
+        mBuilser.buildOs();
+    }
+}

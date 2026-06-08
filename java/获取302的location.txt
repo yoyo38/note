@@ -1,0 +1,2 @@
+HttpHeaders requestHeaders = getHttpHeaders();
+        requestHeaders.add("http.protocol.handle-redirects","false");

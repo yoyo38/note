@@ -1,0 +1,38 @@
+$ tar -zxvf zookeeper-3.4.14.tar.gz
+$ cd zookeeper-3.4.14
+$ cd conf/
+$ cp zoo_sample.cfg zoo.cfg
+$ cd ..
+$ cd bin/
+$ sh zkServer.sh start
+
+如8080被占用 在 zoo.cfg 加 admin.serverPort=xxxxx
+
+开机自启 /lib/systemd/system 下建 zookeeper.service
+
+[Unit]
+Description=zookeeperservice
+After=network.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+Environment=ZOO_LOG_DIR=/usr/local/apache-zookeeper-3.8.0-bin/zkLogData
+Environment=JAVA_HOME=/usr/local/jdk1.8.0_351
+WorkingDirectory=/usr/local/apache-zookeeper-3.8.0-bin/bin
+ExecStart=/usr/local/apache-zookeeper-3.8.0-bin/bin/zkServer.sh start
+ExecReload=/usr/local/apache-zookeeper-3.8.0-bin/bin/zkServer.sh restart
+ExecStop=/usr/local/apache-zookeeper-3.8.0-bin/bin//zkServer.sh stop
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+systemctl daemon-reload
+systemctl start zookeeper
+systemctl enable zookeeper

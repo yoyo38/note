@@ -1,0 +1,3 @@
+pscp D:\Project\java\halo-c\80\halo-1.1.1.jar root@121.42.13.75:/usr/local
+
+pscp D:\Project\halo-theme-anatole-1.2.0.zip root@121.42.13.75:~/.halo

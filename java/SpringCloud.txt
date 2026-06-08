@@ -1,0 +1,2 @@
+服务注册发现 Eureka + Ribbon
+认证授权中心 Spring Security OAuth2

@@ -1,0 +1,43 @@
+spring boot jar部署 控制台 日志 乱码
+问题描述：
+
+spring boot jar包部署，通过java -jar 命令运行.jar文件
+代码中通过变量log输出到控制台的中文，乱码，但是仅仅是在运行jar时才乱码；而在用eclipse debug时，正常
+代码中通过System.out.println()输出的中文，不论是否是通过jar运行，都正常
+日志使用的是默认的logback，未使用log4j
+解决
+1、resources文件夹新建logback.xml（文件名不可修改），内容如下
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- spirng boot 默认使用logback，默认会读取resources文件夹下的名为logback.xml的文件  zhangyu 20180807-->
+<configuration debug="false">
+  <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+  <property name="LOG_HOME" value="C:/loghome" />
+  <!-- 控制台输出 -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+      <!-- <charset>UTF-8</charset> -->
+    </encoder>
+  </appender>
+
+  <!-- 日志输出级别 -->
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+
+2、首先，spring boot 默认使用logback，默认读取resources/下名为logback.xml的日志配置文件，有则读取，没有则使用默认。 
+3、其次，logback.xml，将
+
+<charset>UTF-8</charset>，
+
+注释掉或删除
+4、如果，不配置logback.xml，使用默认的配置，那么部署jar包，java -jar xxx.jar，代码中log变量输出的中文，乱码；如果，配置了logback.xml，但是charset使用UTF-8，那么中文依然乱码；只有使用logback.xml，且，charset删除掉，才能确保中文正常。 
+5、针对这个非常具体的问题，我尝试过，且无用的做法有，在pom的plugin–>spring-boot-maven-plugin–>configuration节点下增加-Dfile.encoding=UTF-8，无用；或者在运行.jar包时，增加参数-Dfile.encoding=UTF-8，依然无用。
+
+参考：https://www.cnblogs.com/reason-cai/p/6763108.html
+————————————————
+版权声明：本文为CSDN博主「leondryu」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/leondryu/article/details/81478114

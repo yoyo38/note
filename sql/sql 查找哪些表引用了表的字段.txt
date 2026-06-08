@@ -1,0 +1,7 @@
+SELECT '【'+WMB.name+'】中的（'+WML.name+'）列引用了【'+ZMB.name+'】中的（'+ZML.name+'）列。'
+    FROM SYS.foreign_key_columns FK JOIN SYS.objects WMB ON FK.parent_object_id=WMB.object_id
+         JOIN SYS.columns WML ON WMB.object_id=WML.object_id AND parent_column_id=WML.column_id
+         JOIN SYS.objects ZMB ON FK.referenced_object_id=ZMB.object_id
+         JOIN SYS.columns ZML ON ZMB.object_id=ZML.object_id AND referenced_column_id=ZML.column_id
+WHERE zmb.name='wishshippablecountry'
+        ORDER BY WMB.name,parent_column_id

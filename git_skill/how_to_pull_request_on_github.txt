@@ -1,0 +1,6 @@
+1. fork
+2. clone
+3. new branch
+4. 修改
+5. 提交推送
+6. 发起pull request

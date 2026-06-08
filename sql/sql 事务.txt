@@ -1,0 +1,30 @@
+BEGIN TRAN Tran_Money    --开始事务
+
+DECLARE @tran_error int;
+SET @tran_error = 0;
+    BEGIN TRY 
+        UPDATE tb_Money SET MyMoney = MyMoney - 30 WHERE Name = '刘备';
+        SET @tran_error = @tran_error + @@ERROR;
+        --测试出错代码，看看刘备的钱减少，关羽的钱是否会增加
+        --SET @tran_error = 1;
+        UPDATE tb_Money SET MyMoney = MyMoney + 30 WHERE Name = '关羽';
+        SET @tran_error = @tran_error + @@ERROR;
+    END TRY
+
+BEGIN CATCH
+    PRINT '出现异常，错误编号：' + convert(varchar,error_number()) + ',错误消息：' + error_message()
+    SET @tran_error = @tran_error + 1
+END CATCH
+
+IF(@tran_error > 0)
+    BEGIN
+        --执行出错，回滚事务
+        ROLLBACK TRAN;
+        PRINT '转账失败，取消交易!';
+    END
+ELSE
+    BEGIN
+        --没有异常，提交事务
+        COMMIT TRAN;
+        PRINT '转账成功!';
+    END

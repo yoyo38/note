@@ -1,0 +1,28 @@
+[Unit]
+Description=ActiveMQ service
+After=network.target
+[Service]
+Type=forking
+ExecStart=/usr/local/activemq/bin/start-activemq.sh
+ExecStop=/usr/local/activemq/bin/stop-activemq.sh
+Restart=on-failure
+PrivateTmp=true
+User=root
+Group=root
+[Install]
+WantedBy=multi-user.target
+
+
+
+#!/bin/sh
+export ACTIVEMQ_HOME=/usr/local/activemq
+export JAVA_HOME=/usr/local/jdk1.8.0_351
+
+sh $ACTIVEMQ_HOME/bin/activemq start
+
+
+#!/bin/sh
+export ACTIVEMQ_HOME=/usr/local/activemq
+export JAVA_HOME=/usr/local/jdk1.8.0_351
+
+sh $ACTIVEMQ_HOME/bin/activemq stop

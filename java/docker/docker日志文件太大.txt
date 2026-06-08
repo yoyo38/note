@@ -1,0 +1,63 @@
+目标
+清理空间
+
+解决办法
+查找大文件的位置
+
+df -lh
+
+du -s /var/*  |sort -nr
+删除大的 log 文件
+
+sudo find /var/lib/docker/containers -name *.log
+
+
+cat /dev/null > /var/lib/docker/containers/374aa0ba92b37d829012282ff15c1bb838d95dedb54589874c4285991be2d4aa/374aa0ba92b37d829012282ff15c1bb838d95dedb54589874c4285991be2d4aa-json.log
+
+
+控制 log 容量的命令
+
+运行时控制
+
+启动容器时，我们可以通过参数来控制日志的文件个数和单个文件的大小
+
+docker run -it --log-opt max-size=10m --log-opt max-file=3 redis
+全局配置
+
+创建或修改文件/etc/docker/daemon.json，并增加以下配置
+
+{
+    "log-driver":"json-file",
+    "log-opts":{
+        "max-size" :"50m","max-file":"1"
+    }
+}
+随后重启 Docker 服务
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+
+
+-------------------------------------------------------
+#!/bin/sh 
+  
+echo "======== start clean docker containers logs ========"  
+  
+logs=$(find /var/lib/docker/containers/ -name *-json.log)  
+  
+for log in $logs  
+        do  
+                echo "clean logs : $log"  
+                cat /dev/null > $log  
+        done  
+
+echo "======== end clean docker containers logs ========"
+
+
+
+vim /etc/docker/daemon.json
+{
+  "registry-mirrors": ["http://f613ce8f.m.daocloud.io"],
+  "log-driver":"json-file",
+  "log-opts": {"max-size":"500m", "max-file":"3"}
+}

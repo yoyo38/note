@@ -1,0 +1,144 @@
+责任链模式（Chain of Responsibility Pattern）为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。
+在这种模式中，通常每个接收者都包含对另一个接收者的引用。如果一个对象不能处理该请求，那么它会把相同的请求传给下一个接收者
+
+意图：避免请求发送者与接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连接成一条链，并且沿着这条链传递请求，直到有对象处理它为止
+主要解决：职责链上的处理者负责处理请求，客户只需要将请求发送到职责链上即可，无须关心请求的处理细节和请求的传递，所以职责链将请求的发送者和请求的处理者解耦了。
+如何解决：拦截的类都实现统一接口。
+关键代码：Handler 里面聚合它自己，在 HandlerRequest 里判断是否合适，如果没达到条件则向下传递，向谁传递之前 set 进去。
+
+应用实例： 1、红楼梦中的"击鼓传花"。 2、JS 中的事件冒泡。 3、JAVA WEB 中 Apache Tomcat 对 Encoding 的处理，Struts2 的拦截器，jsp servlet 的 Filter。
+
+使用场景： 1、有多个对象可以处理同一个请求，具体哪个对象处理该请求由运行时刻自动确定。 2、在不明确指定接收者的情况下，向多个对象中的一个提交一个请求。 3、可动态指定一组对象处理请求。
+
+Handler: 抽象的处理者
+ConcreteHandler : 是具体的处理者，可以访问他的后继者
+Request
+
+public abstract class Approver {
+    Approver approver;
+    String name;
+    public Approver(String name){
+        this.name = name;
+    }
+
+    public void setApprover(Approver approver){
+        this.approver =  approver;
+    }
+
+    public abstract void processRequest(PurchaseRequest purchaseRequest);
+}
+
+public class DepartmentApprover extends Approver {
+    public DepartmentApprover(String name){
+        super(name);
+    }
+
+    @Override
+    public void processRequest(PurchaseRequest purchaseRequest) {
+        if(purchaseRequest.getPrice()<1000){
+            //process
+        }else{
+            approver.processRequest(purchaseRequest);
+        }
+    }
+}
+
+public class PurchaseRequest {
+    private int type;
+    private float price = 0.0f;
+    private int id = 0;
+
+    public PurchaseRequest(int type, float price, int id) {
+        this.type = type;
+        this.price = price;
+        this.id = id;
+    }
+    public int getType() {
+        return type;
+    }
+    public float getPrice() {
+        return price;
+    }
+    public int getId() {
+        return id;
+    }
+}
+-----------------------------------------------------
+public abstract class AbstractLogger {
+   public static int INFO = 1;
+   public static int DEBUG = 2;
+   public static int ERROR = 3;
+ 
+   protected int level;
+ 
+   //责任链中的下一个元素
+   protected AbstractLogger nextLogger;
+ 
+   public void setNextLogger(AbstractLogger nextLogger){
+      this.nextLogger = nextLogger;
+   }
+ 
+   public void logMessage(int level, String message){
+      if(this.level <= level){
+         write(message);
+      }
+      if(nextLogger !=null){
+         nextLogger.logMessage(level, message);
+      }
+   }
+ 
+   abstract protected void write(String message);
+   
+}
+
+public class ConsoleLogger extends AbstractLogger {
+ 
+   public ConsoleLogger(int level){
+      this.level = level;
+   }
+ 
+   @Override
+   protected void write(String message) {    
+      System.out.println("Standard Console::Logger: " + message);
+   }
+}
+
+public class ErrorLogger extends AbstractLogger {
+ 
+   public ErrorLogger(int level){
+      this.level = level;
+   }
+ 
+   @Override
+   protected void write(String message) {    
+      System.out.println("Error Console::Logger: " + message);
+   }
+}
+
+public class ChainPatternDemo {
+   
+   private static AbstractLogger getChainOfLoggers(){
+ 
+      AbstractLogger errorLogger = new ErrorLogger(AbstractLogger.ERROR);
+      AbstractLogger fileLogger = new FileLogger(AbstractLogger.DEBUG);
+      AbstractLogger consoleLogger = new ConsoleLogger(AbstractLogger.INFO);
+ 
+      errorLogger.setNextLogger(fileLogger);
+      fileLogger.setNextLogger(consoleLogger);
+ 
+      return errorLogger;  
+   }
+ 
+   public static void main(String[] args) {
+      AbstractLogger loggerChain = getChainOfLoggers();
+ 
+      loggerChain.logMessage(AbstractLogger.INFO, "This is an information.");
+ 
+      loggerChain.logMessage(AbstractLogger.DEBUG, 
+         "This is a debug level information.");
+ 
+      loggerChain.logMessage(AbstractLogger.ERROR, 
+         "This is an error information.");
+   }
+}
+

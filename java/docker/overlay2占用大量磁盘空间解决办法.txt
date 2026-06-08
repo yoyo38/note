@@ -1,0 +1,8 @@
+cd /var/lib/docker/overlay2
+
+du -h --max-depth=1
+
+查看占用空间的PID，以及对应的容器名称
+docker ps -q | xargs docker inspect --format '{{.State.Pid}}, {{.Name}}, {{.GraphDriver.Data.WorkDir}}' | grep "6b6572a745dccd415280c6b4eacdfb531c61c5f3618be64dc6e20f00b72d6951"
+
+docker stop ainews_processB && docker rm ainews_processB && docker rmi image_id

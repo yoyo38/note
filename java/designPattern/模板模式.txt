@@ -1,0 +1,22 @@
+public abstract class SoyaMilk {
+    //模板方法
+    final void make(){
+        select();
+        addCondiments();
+        soak();
+        beat();
+    }
+
+    protected abstract void beat();
+
+    protected abstract void soak();
+
+    protected abstract void addCondiments();
+
+    protected abstract void select();
+
+    boolean customerWantCondiment(){
+        return true;
+    }
+
+}

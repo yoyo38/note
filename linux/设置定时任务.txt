@@ -1,0 +1,4 @@
+crontab -e
+0 6,18 * * * /usr/local/task/cleanCache.sh
+crontab -l
+systemctl restart crond.service

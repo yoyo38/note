@@ -1,0 +1,30 @@
+Shift+Enter，向下插入新行。
+shift+f10 运行
+ctrl+shift+/  多行注释
+ctrl+d 复制当前行到下一行
+alt+left  回退到上次看的文件
+ctrl+alt+left  回退到上次看的地方
+ctrl+alt+L 格式化代码
+ctrl+f12 查看类的结构
+ctrl+p 提示方法参数类型
+alt+insert 自动生成
+ctrl+n 快速打开类
+ctrl+alt+t 把代码包在一个块内
+shift+f6 重构重命名
+ctrl+x 删除当前行
+ctrl+h 显示类的继承结构
+Alt+1，快速打开或隐藏工程面板。
+Alt+Up/Down，在方法间快速移动定位。
+Ctrl+O，重写方法。
+Ctrl+W，可以选择单词继而语句继而行继而函数。
+Alt+F7，查找整个工程中使用地某一个类、方法或者变量的位置。
+Ctrl+I，实现方法。
+Ctrl+Shift+U，大小写转化。
+Ctrl+U，转到父类。
+Ctrl+Backspace，按单词删除。
+Alt+Shift+F10，选择 Run。
+Alt+7，结构。
+Ctrl+Alt+F7，显示用法。
+
+
+

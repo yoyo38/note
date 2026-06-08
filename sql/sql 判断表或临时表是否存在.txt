@@ -1,0 +1,64 @@
+1、判断数据表是否存在
+
+　　方法一：
+
+use yourdb;
+go
+
+if object_id(N'tablename',N'U') is not null
+print '存在'
+else
+print '不存在'
+
+
+例如：
+use fireweb;
+go
+
+if object_id(N'TEMP_TBL',N'U') is not null
+print '存在'
+else
+print '不存在'
+
+ 
+
+方法二：
+
+USE [实例名]
+GO
+
+IF EXISTS  (SELECT  * FROM dbo.SysObjects WHERE ID = object_id(N'[表名]') AND OBJECTPROPERTY(ID, 'IsTable') = 1)
+PRINT '存在'
+ELSE
+PRINT'不存在'
+
+
+例如：
+use fireweb;
+go
+
+IF EXISTS  (SELECT  * FROM dbo.SysObjects WHERE ID = object_id(N'TEMP_TBL') AND OBJECTPROPERTY(ID, 'IsTable') = 1)
+PRINT '存在'
+ELSE
+PRINT'不存在'
+
+2、临时表是否存在：
+
+方法一：
+use fireweb;
+go
+
+if exists(select * from tempdb..sysobjects where id=object_id('tempdb..##TEMP_TBL'))
+PRINT '存在'
+ELSE
+PRINT'不存在'
+
+
+方法二：
+use fireweb;
+go
+
+if exists (select * from tempdb.dbo.sysobjects where id = object_id(N'tempdb..#TEMP_TBL') and type='U')
+PRINT '存在'
+ELSE
+PRINT'不存在'

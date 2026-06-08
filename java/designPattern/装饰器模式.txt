@@ -1,0 +1,27 @@
+动态的将新功能附加在对象上  （套娃设计模式）
+主体
+包装（decorator）
+
+public abstract class Drink{  //被装饰者
+
+}
+
+public class Coffee extends Drink{
+
+}
+
+public Espressso extends Coffee{ // 意大利kafei
+
+}
+
+
+public class Decorator extends Drink{ // 装饰者   继承+组合
+	private Drink drink;  // 组合
+
+}
+
+public class Chocolate extends Decorator{  //具体的装饰者
+
+}
+
+

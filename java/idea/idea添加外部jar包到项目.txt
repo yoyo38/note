@@ -1,0 +1,5 @@
+方法1： File -> Project Structure -> Libraries -> +
+
+方法2： 项目下新建一个libs文件夹 -> 复制外部jar包到libs下 -> 右键libs文件夹 -> Add as Library
+
+推荐用方法2

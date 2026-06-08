@@ -1,0 +1,45 @@
+Can't read dir of '/etc/my.cnf.d' (Errcode: 2 - No such file or directory)
+mkdir /etc/my.cnf.d/
+
+service mysql启动失败 提示unit not found 解决办法 
+https://www.jianshu.com/p/20d9254469d1
+
+
+//这里发现防火墙是开启的，再来查看防火墙控制的端口
+systemctl status firewalld
+//查看防火墙控制的端口，发现我想要监听的8081端口没有开启
+firewall-cmd --list-all
+//永久开启3306端口
+sudo firewall-cmd --zone=public --add-port=3306/tcp --permanent
+//重载防火墙
+sudo firewall-cmd --reload
+
+
+ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql
+service mysql restart
+
+
+启动mysql服务器
+/usr/local/mysql/support-files/mysql.server start
+
+https://cloud.tencent.com/developer/article/1451186
+
+设置开机自动启动
+
+1、将服务文件拷贝到init.d下，并重命名为mysql
+[root@localhost /]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld
+2、赋予可执行权限
+[root@localhost /]# chmod +x /etc/init.d/mysqld
+3、添加服务
+[root@localhost /]# chkconfig --add mysqld
+4、显示服务列表
+[root@localhost /]# chkconfig --list
+
+假如登陆时碰到mysql:command not found , ln -s /usr/local/mysql/bin/mysql /usr/bin 这样解决
+
+https://www.jianshu.com/p/276d59cbc529
+my.cnf 添加
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+
+
+update user set user.Host='%' where user.User='root';

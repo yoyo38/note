@@ -1,0 +1,43 @@
+update t_1 t
+set t_id = map.new_id
+from t_map map
+where t.t_id = map.old_id
+and t.name = 'a'
+
+update work_basic set status=12,status_date=enter_date where status=1;
+
+update work_basic b
+set status=10,status_date=a.discover_date
+from work_abnormal a inner join work_abnormal_detail d on d.abnormal_id=a.id
+where b.farm_id=a.farm_id and b.id_number=d.id_number and b.status=12 and a.have_id=1 and d.abnormal_type_name='流产' and d.id_number is not null;
+
+update work_basic b
+set status=9,status_date=a.discover_date
+from work_abnormal a inner join work_abnormal_detail d on d.abnormal_id=a.id
+where b.farm_id=a.farm_id and b.id_number=d.id_number and b.status=12 and a.have_id=1 and d.abnormal_type_name='返情' and d.id_number is not null;
+
+update work_basic b
+set status=8,status_date=a.discover_date
+from work_abnormal a inner join work_abnormal_detail d on d.abnormal_id=a.id
+where b.farm_id=a.farm_id and b.id_number=d.id_number and b.status=12 and a.have_id=1 and d.abnormal_type_name='空怀' and d.id_number is not null;
+
+update work_basic b
+set status=10,status_date=a.discover_date
+from work_abnormal a inner join work_abnormal_detail d on d.abnormal_id=a.id
+where b.farm_id=a.farm_id and b.id_number=d.id_number and b.status_date is not null and a.discover_date>b.status_date and a.have_id=1 and d.abnormal_type_name='流产' and d.id_number is not null;
+
+update work_basic b
+set status=9,status_date=a.discover_date
+from work_abnormal a inner join work_abnormal_detail d on d.abnormal_id=a.id
+where b.farm_id=a.farm_id and b.id_number=d.id_number and b.status_date is not null and a.discover_date>b.status_date and a.have_id=1 and d.abnormal_type_name='返情' and d.id_number is not null;
+
+update work_basic b
+set status=8,status_date=a.discover_date
+from work_abnormal a inner join work_abnormal_detail d on d.abnormal_id=a.id
+where b.farm_id=a.farm_id and b.id_number=d.id_number and b.status_date is not null and a.discover_date>b.status_date and a.have_id=1 and d.abnormal_type_name='空怀' and d.id_number is not null;
+
+update work_basic b
+set status_date=e.elimination_date
+from work_elimination e inner join work_elimination_detail d on d.elimination_id=e.id
+where b.status in (2,3) and b.farm_id=e.farm_id and b.id_number=d.id_number;
+

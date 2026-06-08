@@ -1,0 +1,15 @@
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+ADD spring-boot-docker-1.0.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+
+
+
+docker build -t dockerdemo .
+
+
+docker run -d --name dockerdemo -p 8090:8090 dockerdemo
+
+进入容器
+docker exec -i -t  mynginx /bin/bash

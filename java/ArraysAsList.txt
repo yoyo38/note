@@ -1,0 +1,21 @@
+Integer[] array = new Integer[]{23,21,88,99};
+        List<Integer> list = Arrays.asList(array);
+        list.forEach(System.out::println);
+        System.out.println("===========================");
+        array[0] = 77;
+        list.forEach(System.out::println);
+
+1. Arrays.asList 返回的List是可变的，数组变了list会相应的变
+
+2. Arrays.asList 返回的List是不支持add和remove操作的，也就是说Arrays.asList返回的List是个固定大小的List
+
+如果希望转过后的list可以支持add和remove操作，可使用如下方法：
+/*方法一*/
+ArrayList<Integer> copyArrays=new ArrayList<>(Arrays.asList(integerArray));
+ 
+/*方法二*/
+List<Integer> integerList = new ArrayList<>();
+Collections.addAll(integerList, integerArray);
+————————————————
+版权声明：本文为CSDN博主「卓立0」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/weixin_41835612/article/details/83611082

@@ -1,0 +1,4 @@
+//根据流程实例 ID 获取当前活动任务
+Task  task = taskService.createTaskQuery().processInstanceId("流程实例ID").active().singleResult();
+String taskId = task.getId();
+System.out.println("任务ID"+taskId);

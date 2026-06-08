@@ -1,0 +1,11 @@
+﻿<dependency>
+	<groupId>com.jd.openapi</groupId>
+	<artifactId>OpenAPI-sdk</artifactId>
+	<version>1.0-SNAPSHOT</version>
+</dependency>
+
+mvn install:install-file -Dfile=jar包的位置 -DgroupId=自定义groupId -DartifactId=自定义artifactId -Dversion=自定义version -Dpackaging=jar		
+
+mvn install:install-file -Dfile=D:\JavaFiles\extJar\OpenAPI-sdk-1.0-SNAPSHOT.jar -DgroupId=com.jd.openapi -DartifactId=OpenAPI-sdk -Dversion=1.0-SNAPSHOT -Dpackaging=jar
+
+mvn deploy:deploy-file -DgroupId=com.jd.openapi -DartifactId=OpenAPI-sdk -Dversion=1.0 -Dpackaging=jar -Dfile=D:\JavaFiles\extJar\OpenAPI-sdk-1.0-SNAPSHOT.jar -Durl=http://192.168.1.73:8081/repository/maven-releases/ -DrepositoryId=nexus-releases  

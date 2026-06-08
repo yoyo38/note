@@ -1,0 +1,21 @@
+mybaits-plus+druid 使用 LocalDateTime 出现nested exception is java.sql.SQLFeatureNotSupportedException
+
+jamesluozhiwei 2019-12-18 16:43:20  256  收藏
+分类专栏： Java mybatis
+版权
+mybaits-plus+druid 使用 LocalDateTime 出现nested exception is java.sql.SQLFeatureNotSupportedException
+解决方案一（推荐）
+目前druid已经修复了这个问题并提交了新版本，最优直接选择升级druid 至 1.1.21 或以上
+
+releases 版本地址 https://github.com/alibaba/druid/releases/tag/1.1.21
+
+解决方案二
+在druid 的GitHub中有关于这个异常的issues https://github.com/alibaba/druid/issues/3302
+
+可以将mybatis版本降级到3.5.0或以下可以解决这个异常(目前druid已经修复)
+
+解决方案三
+手动修改LocalDateTime类型为Date类型，一样可以解决问题，但感觉这不是咱们想要的
+————————————————
+版权声明：本文为CSDN博主「jamesluozhiwei」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_38403662/article/details/103600501

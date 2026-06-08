@@ -1,0 +1,24 @@
+https://www.cnblogs.com/chenhui7373/p/8598337.html
+
+apply plugin: 'maven'
+
+task convert2Maven {
+    doLast {
+        file("$buildDir/poms/pom-default.xml").renameTo(file("$rootDir/pom.xml"))
+    }
+}
+install.dependsOn(convert2Maven)
+
+
+但是如果我不想build时自动执行测试，而是手动执行测试呢？我可不想在生产环境执行测试代码。
+很简单，只要在部署脚本使用-x test就可以了。
+
+gradle build -x test
+手动执行test
+
+gradle test
+
+作者：鹅鹅鹅_
+链接：https://www.jianshu.com/p/61c5d163a4c9
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

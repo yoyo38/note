@@ -1,0 +1,116 @@
+为对象提供一个替身，以控制对这个对象的访问。通过代理对象访问目标对象好处是：可以增加额外功能
+
+代理类和被代理类实现同一个接口（或继承同一个父类）
+代理对象持有被代理对象
+
+---------------静态代码-----------------
+public interface TeachDao {
+    void teach();
+}
+
+public class TeachDaoImpl implements TeachDao {
+    @Override
+    public void teach() {
+        System.out.println("老师授课中。。。");
+    }
+}
+
+public class TeachDaoProxy implements TeachDao {
+    private TeachDao target;
+
+    public TeachDaoProxy(TeachDao target) {
+        this.target = target;
+    }
+
+    @Override
+    public void teach() {
+        System.out.println("开始代理");
+        target.teach();
+        System.out.println("tj");
+    }
+}
+
+public class Client {
+    public static void main(String[] args) {
+        TeachDao teachDao = new TeachDaoImpl();
+        TeachDaoProxy teachDaoProxy = new TeachDaoProxy(teachDao);
+        teachDaoProxy.teach();
+    }
+}
+
+----------------jdk动态代理----------------
+和静态代理一样要求目标对象实现一个接口
+
+public interface TeachDao {
+    void teach();
+}
+
+public class TeacherDao implements TeachDao {
+    @Override
+    public void teach() {
+        System.out.println("老师授课中。。。");
+    }
+}
+
+public class ProxyFactory {
+    private Object target;
+
+    public ProxyFactory(Object target) {
+        this.target = target;
+    }
+
+    public Object getProxyInstance(){
+        //loader: 目标对象使用的类加载器
+        return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                System.out.println("jdk代理开始");
+                Object returnVal = method.invoke(target,args);
+                return returnVal;
+            }
+        });
+    }
+
+}
+
+public class Client {
+    public static void main(String[] args) {
+        TeachDao teachDao = new TeacherDao();
+
+        TeachDao proxyInstance =(TeachDao) new ProxyFactory(teachDao).getProxyInstance();
+        proxyInstance.teach();
+    }
+}
+
+-------------Cglib动态代理---------------------------
+代理的类不能是final类， 目标的final/static方法不会被拦截
+
+public class ProxyFactory implements MethodInterceptor{
+    private Object target;
+
+    public ProxyFactory(Object target) {
+        this.target = target;
+    }
+
+    public Object getProxyInstance(){
+        Enhancer enhancer = new Enhancer();
+		enhancer.setSupperclass(target.getClass());
+		enhancer.setCallback(this);
+		return enhancer.create();
+    }
+	
+	@Override
+	public Object intercept(Object arg0, Method method,Object[] args,MethodProxy arg3){
+		System.out.println("cglib d l ")
+		Object returnVal = method.invoke(target,args);
+		sout(" t j")
+		return returnVal;
+		
+	}
+
+}
+
+
+
+
+

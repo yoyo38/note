@@ -1,0 +1,375 @@
+typeof:检查给定变量的数据类型，可能返回以下某个字符串
+"undefined" "boolean" "string" "number" "object" "function"
+基本类型：Undefined,Null,Boolean,Number,String
+undefined类型：只有一个undefined值
+null类型：只有一个null值
+NaN ： 一个特殊的数值 isNaN() 不是数值返回true
+3个将非数值转换为数值的函数：Number()、parseInt()、parseFloat()
+toString() : 转换为字符串
+--------------------------------
+Object类型：一组数据和功能的集合，可用new来创建
+var o = new Object();
+-----------------
+语句：
+if  do-while  while  for  for-in switch  
+
+-------------------------
+function :不存在函数签名，函数的参数个数是由调用时传递进来的个数决定的，不是定义决定的
+
+--------------------------------------------
+压缩器：JSMin 免费 http://www.crockford.com/javascript/jsmin.html
+Dojo ShrinkSafe、YUI Compressor(处理后文件最小)
+---------------------------
+可以为引用类型添加属性，但基本类型不行
+var person = new Object();
+person.name = "abc";
+alert(person.name);  //abc
+-------------------------------------
+复制变量：基本类型会复制出一个独立的值
+引用类型复制出的值和原来的指向同一个对象
+-------------------------------------
+参数传递：和复制变量一个道理
+基本类型->按值传递，独立，不受影响
+引用类型（Object）-> 会受影响，但是传递的是值不是引用
+---------------------------------------
+检测类型：typeof 最佳，但在检测引用类型时很无力，改用instanceof操作符
+-----------------------------------------
+没有块级作用域：if for 等{ }里面声明的变量在{ }外也能使用
+--------------------------
+不加var 声明变量会自动变成全局变量
+------------------------------------------
+搜索标识符：先搜索局部，没找到再搜索全局
+-----------------------------------
+管理内存：将变量设为null可以释放内存
+-----------------------------------
+创建Object对象两种方法：
+1. var person = new Object();
+   person.name = "abc"; person.age = 29;
+2. var person ={ name : "abc", age : 29  }
+-----------------------------------------
+可以使用方括号访问属性：
+alert(person["name"]); //abc
+--------------------------------
+Array类型：除了Object之外，Array恐怕是最常用的类型
+创建数组：方式一
+var colors = new Array();
+var colors = new Array(7); //可以省略new
+var colors = new Array("red","blue","green");
+方式二：使用方括号
+var colors = ["red","blue","green"];
+读取数组： 
+alert(colors[0]); //第一项
+colors[2] = "black"; //第三项
+------------------------------------
+数组的length属性：始终>=0，不是只读，可以设
+colors[colors.length] = "yellow"; //在末尾添加新项
+---------------------------------
+检测数组：
+if (Array.isArray(value)){
+    //
+}
+----------------------------------
+数组 toString()会返回用逗号分隔的每一项字符串
+join() 返回以指定字符分隔的字符串
+---------------------------------------
+栈是一种LIFO (后进先出)的数据结构，最新添加的项最早被移除，插入和移除只发生在一个位置--栈的顶部
+---------------------------
+push() : 添加项到末尾，返回修改后的数组长度
+pop() :  从末尾移除最后一项，返回移除的项
+var colors = new Array();
+var count = colors.push("red","green");
+alert(count);  //2
+count = colors.push("black"); //3
+
+var item = colors.pop();
+alert(item); //"black"
+alert(colors.length);  //2
+----------------------------
+队形数据结构的访问规则：FIFO（先进先出）
+shift() : 移除数组中的第一项并返回该项
+var item = colors.shift();
+alert(item); //"red" 取得第一项，同时长度减1
+--------------------
+unshift() : 在数组前端添加任意个项并返回新数组的长度
+-------------------------
+reverse() : 反转数组项的顺序， colors.reverse();
+sort() : 默认升序，可以传递一个函数作为参数  values.sort(compare);
+---------------------------
+concat() : 复制一个数组并把传递过来的参数添加到数组中
+var colors2 = colors.concat("yellow",["black","brown"]);
+------------------------
+slice(m,n) : 假如只有一个参数，返回m到末尾，否则返回m-n(不包括n),不会影响原数组。 
+---------------------------------
+splice() : 功能强大，删除，插入，替换，返回一个包含被删除的项的数组，没删除则返回空数组。
+删除：colors.splice(0,1);  //删除第一项，1是要删除的个数
+插入：colors.splice(1,0,"yellow","orange"); //从位置1开始插入两项
+替换：colors.splice(1,1,"red","purple"); //在位置1插入两项，删除1项
+-------------------------------
+indexOf(),lastIndexOf() : 返回在数组中的位置，没找到返回-1
+var numbers = [1,2,3,4,5,4,3,2,1];
+alert(numbers.indexOf(4)); //3
+alert(numbers.lastIndexOf(4)); //5
+---------------------------------------
+以下5个方法都会对数组中的每一项运行给定函数,都不会修改数组中包含的值
+every(): 每一项都返回true则返回true
+filter():返回会返回true的项组成的数组
+forEach() :没返回值
+map(): 返回每项函数调用的结果组成的数组
+some():任一项返回true则返回true
+---------------------------
+=============  Date类型  ================
+
+创建一个日期对象： var now = new Date();
+创建一个指定日期对象： var someDate = new Date(Date.parse("May 25,2016"));
+或者 var someDate = new Date("May 25,2016");
+-----------------
+var start = Date.now(); //当前时间
+----------------
+Date类型的valueOf()方法返回日期的毫秒形式
+--------------------------
+日期格式化：
+toDateString()
+toTimeString()
+-------------------------
+getTime() 	返回日期的毫秒数，与valueOf()相同
+setTime(毫秒)
+getFullYear()	取4位数的年份，如2016
+setFullYear(年)
+getMonth()	返回日期中的月份，0表示一月，11表示12月
+setMonth(月)
+getDate()	返回月份中的天数（1-31）
+setDate(日)
+getDay()	返回星期几（0表示星期日，6表示星期六）
+getHours()	返回小时数（0-23）
+setHours(时)
+getMinutes()    0-59
+setMinutes()
+getSeconds()	0-59
+setSeconds()
+-------------------------------------------
+===============  RegExp类型  ==================
+var expression = /pattern/flags;
+var expression = new RegExp("pattern","flags");
+
+var matches = pattern.exec(text);
+pattern.test(text) ;  //返回true or false
+------------------------------------------------------
+===============  Function类型  ===========================
+函数实际上是对象，每个函数都是Function类型的实例
+function sum (num1,num2) {
+    return num1 + num2;
+}
+var sum = function(num1,num2) {
+    return num1 + num2;
+};
+两个方式定义的函数几乎相差无几
+
+--------------------------------
+函数声明会被提升，即使写在调用它的代码后面也不会报错，函数表达式则会报错
+--------------------------
+arguments.callee : 指向拥有这个arguments的函数
+--------------------------------------
+this : 引用的是函数据以执行的环境对象
+------------------------------------
+函数包含两个属性：length和prototype
+length : 函数希望接收的命名参数的个数
+-----------------------------------
+每个函数有两个非继承而来的方法：apply(),call()
+--------------------------------------
+var num=10;
+alert(num.toFixed(2)); //"10.00"
+------------------------------------------
+String类型是字符串的对象包装类型 var stringObject=new String("hello");
+var s="hello ";
+alert(s.charAt(1)); //"e"
+alert(s.charCodeAt(1)); //"101"
+alert(s[1]);  //"e"
+var result=s.concat("world"); //"hello world"
+slice()
+substring()
+substr()
+以上3个都不会改变原字符串
+var s="hello world";
+s.slice(3)   		lo world
+s.substring(3)		lo world	
+s.substr(3)		lo world
+s.slice(3,7)		lo w
+s.substring(3,7)	lo w
+s.substr(3,7)		lo worl
+---------------------------------------------
+s.indexOf("o")  //4 ,如果没找到返回-1
+s.indexOf("o",6) //7
+s.trim() //去掉前后空格，不会改变s
+toLowerCase()
+toUpperCase()
+var matches=s.match(pattern);
+var pos=s.search(pattern); //返回第一个匹配的索引，没找到返回-1
+s.replace("","")
+s.split(",")
+s.localeCompare("abc"); a.c(b)-> -1  b.c(a)-> 1  
+------------------------------------------
+两个单体内置对象：Global,Math
+encodeURI() 只会对非法字符编码，其他不动
+encodeURIComponent()  对所有非字母数字字符编码
+decodeURI()
+decodeURIComponent()
+
+eval()方法
+接受一个参数，即要执行的javascript字符串
+----------------------------------
+Math.max(3,78,32,99);
+Math.ceil()
+Math.floor()
+Math.round()
+Math.random()  //返回0-1的一个随机数，不包括0和1
+-----------------------------
+字面量语法创建对象：
+var person = {
+    name:"Tony",
+    age:29,
+    job:"Software Engineer",
+    sayName:function(){
+        alert(this.name);
+    }
+};
+-------------------------------------------
+设置属性的特性：
+Object.defineProperty()
+Object.defineProperties()  //修改多个属性
+--------------
+读取属性的特性：
+Object.getOwnPropertyDescriptor()
+-------------------------------
+惯例：构造函数始终用大写字母开头，非构造函数用小写字母开头
+--------------------
+检测对象类型：
+alert(person1 instanceof Person);  //true
+--------------------------------
+ECMAScript中的函数是对象
+--------------------------------
+alert(Person.prototype.isPrototypeOf(person1));  //true
+alert(Object.getPrototypeOf(person1)==Person.prototype); //true
+--------------------------
+delete person1.name;    //删除实例属性，再访问会访问原型中的属性
+---------------------------
+alert(person1.hasOwnProperty("name"));  //检查是否有自己的实例属性，返回true or false
+----------------------
+alert("name" in person1); //true ，只要person1有name属性就返回true，无论是它自己的还是原型的
+----------------------------
+for-in 循环
+
+Object.keys()  接收一个对象作为参数，返回包含所有可枚举属性的字符串数组
+alert(Object.keys(person1));
+------------------------------------
+创建自定义类型最常见的方式就是组合使用构造函数模式与原型模式
+构造函数模式定义实例属性，原型模式定义方法和共享的属性
+function Person(name,age,job){
+    this.name=name;
+    this.age=age;
+    this.job=job;
+    this.friends=["shelby","court"];
+}
+
+Person.prototype={
+    constructor:Person,
+    sayName:function(){
+        alert(this.name);
+    }
+}
+--------------------------------
+组合继承：最常用的继承模式
+Object.create()     //原型式继承
+------------------------------
+寄生组合式继承是引用类型最理想的继承
+------------------------------------------
+函数声明提升
+-----------------------
+arguments.callee  一个指向正在执行的函数的指针 
+------------------------------
+模仿块级作用域，将函数声明转换成函数表达式：加括号
+(function(){
+	//块级作用域
+})();
+----------------------------
+在匿名函数中定义的任何变量，都会在执行结束时被销毁
+---------------------------------------
+单例：只有一个实例的对象
+var singleton={
+    name : value,
+    method : function(){
+        //
+    }
+};
+var singleton = function(){
+
+
+
+
+
+}
+
+----------------------------------
+JSON 是一种数据格式，不是一种编程语言
+json的语法可以表示以下3种类型的值：简单值，对象，数组
+json的字符串必须使用双引号
+json中的对象：
+{
+    "name":"tony",
+    "age":29
+}
+json中的数组：
+[25,"hi",true]
+
+-------------------------
+JSON对象有两个方法： stringify(),parse() 
+stringify():把JavaScript对象序列化为一个JSON字符串
+    var jsonText = JSON.stringify(book);
+parse(): JSON字符串转为Javascript对象
+    var bookCopy = JSON.parse(jsonText);
+
+toJSON()  在对象上调用
+
+------------------------------------------------------
+window对象同时扮演着ecmascript中的Global对象的角色，因此在全局作用域中声明的变量、函数都会变成window对象的属性和方法。
+-----------------------------
+框架内的不能用框架外的js文件
+-----------------------------
+JavaScript是单线程语言
+--------------------------
+location对象既是window对象的属性，也是document对象的属性
+location的属性取得url的各数据
+location.assign("http://www")== window.location="http" == location.href="http"
+location.replace():不留记录
+location.reload()
+location.reload(true);//从服务器重新加载
+-------------------------
+document对象是window对象的一个属性
+------------------------------------
+
+在js逻辑运算中，0、""、null、false、undefined、NaN都会判为false，其他都为true
+
+-------------------------------
+一般构造函数名首字母大写，这里没有大写的原因是想提醒读者，构造函数也是一般的函数而已。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

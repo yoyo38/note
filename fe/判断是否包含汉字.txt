@@ -1,0 +1,9 @@
+function CheckChinese(obj,val){    
+°°°°var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+°°°°if(reg.test(val)){    
+       alert("≤ªƒ‹ ‰»Î∫∫◊÷£°"); 
+       var strObj = document.getElementById(obj); 
+       strObj.value = ""; 
+       strObj.focus();         
+°°°°}      
+  }

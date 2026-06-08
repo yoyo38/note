@@ -1,0 +1,7 @@
+将抽象和实现放在两个不同的类层次中，使两个层次可以独立变化
+抽象类依赖实现类
+
+abstract class Phone {  //抽象
+	private Brand brand;  // 持有实现类
+}
+
