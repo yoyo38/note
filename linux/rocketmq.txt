@@ -1,0 +1,77 @@
+1. 创建目录
+# 创建一个目录用于存放 RocketMQ 的 Compose 文件
+mkdir -p ~/rocketmq-docker && cd ~/rocketmq-docker
+
+# 创建 docker-compose.yml 文件
+touch docker-compose.yml
+
+
+
+
+2。 docker compose
+
+version: '3.8'
+services:
+  # 命名服务 (NameServer)
+  namesrv:
+    image: apache/rocketmq:5.3.2           # 使用官方镜像，可更换版本
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876                          # NameServer 默认端口
+    networks:
+      - rocketmq
+    command: sh mqnamesrv
+
+  # 消息存储服务 (Broker)
+  broker:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqbroker
+    ports:
+      - 10909:10909                        # Broker 的 VIP 端口
+      - 10911:10911                        # Broker 的通信端口（核心）
+      - 10912:10912                        # Broker 的 HA 高可用端口
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876       # 告诉 Broker NameServer 的地址
+    depends_on:
+      - namesrv
+    networks:
+      - rocketmq
+    command: sh mqbroker
+
+  # 代理服务 (Proxy) - RocketMQ 5.x 新增组件，用于支持 gRPC 协议
+  proxy:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqproxy
+    networks:
+      - rocketmq
+    depends_on:
+      - broker
+      - namesrv
+    ports:
+      - 8080:8080                          # gRPC 端口
+      - 8081:8081                          # 内部通信端口
+    restart: on-failure
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    command: sh mqproxy
+
+# 定义网络，方便容器间通信
+networks:
+  rocketmq:
+    driver: bridge
+
+3. 启动
+
+# 在后台启动所有服务
+docker compose up -d
+
+# 查看服务状态
+docker compose ps
+
+# 查看实时日志（按 Ctrl+C 退出）
+docker compose logs -f
+
+
+4。 内存控制
+environment:
+  - MAX_POSSIBLE_HEAP=256m   # 限制堆内存

@@ -1,0 +1,87 @@
+1. 创建项目目录和配置文件
+
+mkdir -p ~/rabbitmq-docker && cd ~/rabbitmq-docker
+touch docker-compose.yml
+
+2. 编写 docker-compose.yml
+
+services:
+  rabbitmq:
+    image: rabbitmq:4.2-management
+    container_name: rabbitmq-server
+    hostname: rabbitmq-node1
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin123
+    ports:
+      - "5672:5672"      # AMQP 端口
+      - "15672:15672"    # Web 管理界面端口
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq   # 数据持久化
+      - rabbitmq_logs:/var/log/rabbitmq   # 日志持久化
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+  rabbitmq_logs:
+
+
+3. 启动服务
+ 
+# 在后台启动
+docker compose up -d
+
+# 查看状态
+docker compose ps
+
+# 查看日志
+docker compose logs -f
+
+检查容器状态
+docker ps | grep rabbitmq
+
+安装常用插件
+延迟消息插件（Delay Exchange）
+1. 下载插件：从 RabbitMQ 社区插件页面 下载对应版本的 rabbitmq_delayed_message_exchange 插件。
+2. 上传并安装：
+ 
+# 将插件文件复制到容器内
+docker cp /path/to/rabbitmq_delayed_message_exchange-xxx.ez rabbitmq-server:/plugins
+
+# 进入容器启用插件
+docker exec -it rabbitmq-server bash
+rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+exit
+
+# 重启容器
+docker restart rabbitmq-server
+ 
+ 
+MQTT 协议支持
+ 
+docker exec rabbitmq-server rabbitmq-plugins enable rabbitmq_mqtt
+docker exec rabbitmq-server rabbitmq-plugins enable rabbitmq_web_mqtt
+
+
+
+---------------------------------------------------------
+# 检查端口映射
+docker port rabbitmq-server
+
+# 开放防火墙端口
+sudo ufw allow 15672/tcp
+
+
+---------------------------------------------------------------
+生产环境建议
+1. 使用强密码：不要在命令中明文写密码，建议使用 .env 文件或 Docker Secrets-
+。
+2. 固定 hostname：--hostname 必须固定，否则容器重启后数据会丢失-
+。
+3. 数据持久化：使用 Docker 卷或挂载宿主机目录，确保容器删除后数据不丢失。
+4. 资源限制：为容器设置内存和 CPU 限制：
+ 
+docker run -d ... --memory="512m" --cpus="1" rabbitmq:4.2-management
+ 
+ 
+5. 开启 TLS/SSL：生产环境建议配置加密通信，相关端口为 5671（AMQP with TLS）和 15671（管理界面 HTTPS）

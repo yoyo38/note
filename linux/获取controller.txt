@@ -1,0 +1,95 @@
+方式一：
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.Controller;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.method.HandlerMethod;
+
+import javax.annotation.PostConstruct;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Component
+public class ControllerScanner {
+
+    @Autowired
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    /**
+     * 获取所有Controller信息
+     */
+    public List<ControllerInfo> getAllControllers() {
+        Map<RequestMappingInfo, HandlerMethod> handlerMethods = 
+            requestMappingHandlerMapping.getHandlerMethods();
+        
+        return handlerMethods.values().stream()
+            .map(HandlerMethod::getBeanType)
+            .distinct()
+            .filter(this::isController)
+            .map(controllerClass -> ControllerInfo.builder()
+                .className(controllerClass.getName())
+                .simpleName(controllerClass.getSimpleName())
+                .type(controllerClass.isAnnotationPresent(RestController.class) ? "REST" : "WEB")
+                .mappings(getMappingsForController(controllerClass, handlerMethods))
+                .build())
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取指定Controller的所有映射路径
+     */
+    private List<String> getMappingsForController(Class<?> controllerClass,
+                                                   Map<RequestMappingInfo, HandlerMethod> handlerMethods) {
+        return handlerMethods.entrySet().stream()
+            .filter(entry -> entry.getValue().getBeanType().equals(controllerClass))
+            .map(entry -> entry.getKey().getPatternsCondition())
+            .filter(Objects::nonNull)
+            .flatMap(condition -> condition.getPatterns().stream())
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * 判断是否为Controller
+     */
+    private boolean isController(Class<?> clazz) {
+        return clazz.isAnnotationPresent(Controller.class) ||
+               clazz.isAnnotationPresent(RestController.class);
+    }
+}
+
+
+方式二：
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.Controller;
+
+import java.util.Map;
+
+@Service
+public class ControllerService {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    /**
+     * 获取所有Controller Bean
+     */
+    public Map<String, Object> getAllControllerBeans() {
+        return applicationContext.getBeansWithAnnotation(RestController.class);
+    }
+
+    /**
+     * 获取所有Controller和RestController的Bean
+     */
+    public Map<String, Object> getAllControllers() {
+        Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(Controller.class);
+        controllers.putAll(applicationContext.getBeansWithAnnotation(RestController.class));
+        return controllers;
+    }
+}

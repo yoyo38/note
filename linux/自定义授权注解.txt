@@ -1,0 +1,50 @@
+@Component
+public class MyAuthorizationManager implements AuthorizationManager<MethodInvocation> {
+    
+    @Override
+    public AuthorizationDecision check(Supplier<Authentication> authentication, 
+                                       MethodInvocation invocation) {
+        Authentication auth = authentication.get();
+        
+        // 未认证直接拒绝
+        if (auth == null || !auth.isAuthenticated()) {
+            return new AuthorizationDecision(false);
+        }
+        
+        // 获取方法上的自定义注解
+        Method method = invocation.getMethod();
+        MyPermission myPermission = method.getAnnotation(MyPermission.class);
+        
+        if (myPermission == null) {
+            // 没有权限要求，放行
+            return new AuthorizationDecision(true);
+        }
+        
+        // 自定义权限逻辑
+        String requiredPermission = myPermission.value();
+        boolean granted = auth.getAuthorities().stream()
+            .anyMatch(grantedAuthority -> 
+                grantedAuthority.getAuthority().equals(requiredPermission));
+        
+        return new AuthorizationDecision(granted);
+    }
+}
+
+
+
+
+@Configuration
+@EnableMethodSecurity(prePostEnabled = false)
+public class SecurityConfig {
+    
+    @Autowired
+    private MyAuthorizationManager myAuthorizationManager;
+    
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public Advisor preAuthorizeAuthorizationMethodInterceptor() {
+        // 使用静态工厂方法创建更简洁
+        return AuthorizationManagerBeforeMethodInterceptor
+            .preAuthorize(myAuthorizationManager);
+    }
+}

@@ -1,0 +1,197 @@
+8dec9103e7274e9eabf9b3b9faa43ece
+
+方案一：使用 docker run 命令快速部署
+这是最简单快捷的方式，适合快速启动一个测试用的 Jenkins 服务。
+
+1. 拉取 Jenkins 镜像
+推荐使用长期支持版（LTS），更加稳定：
+
+bash
+docker pull jenkins/jenkins:lts
+2. 创建数据持久化目录
+为了让 Jenkins 的配置、任务和构建产物在容器删除后依然保留，创建一个本地目录用于挂载：
+
+bash
+mkdir -p ~/jenkins-data
+# 重要：需要修改目录权限，因为 Jenkins 容器内以 jenkins 用户（UID 1000）运行
+sudo chown -R 1000:1000 ~/jenkins-data
+3. 运行 Jenkins 容器
+执行以下命令启动 Jenkins 容器：
+
+bash
+docker run -d \
+  --name jenkins \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v ~/jenkins-data:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e JAVA_OPTS="-Duser.timezone=Asia/Shanghai" \
+  --restart unless-stopped \
+  jenkins/jenkins:lts
+命令参数说明：
+
+参数	说明
+-d	后台运行容器
+--name jenkins	指定容器名称
+-p 8080:8080	映射 Jenkins Web 界面端口
+-p 50000:50000	映射 Jenkins 代理（Agent）通信端口
+-v ~/jenkins-data:/var/jenkins_home	挂载数据目录，持久化 Jenkins 数据
+-v /var/run/docker.sock:/var/run/docker.sock	挂载 Docker Socket，允许 Jenkins 容器调用宿主机的 Docker 命令（实现 Docker in Docker）
+-e JAVA_OPTS="-Duser.timezone=Asia/Shanghai"	设置时区为北京时间
+--restart unless-stopped	容器退出时自动重启（除非手动停止）
+⚙️ 方案二：使用 Docker Compose 部署（推荐生产环境）
+Docker Compose 方式更适合需要精细配置或长期使用的场景，配置更清晰、易于管理。
+
+1. 创建项目目录和配置文件
+bash
+mkdir -p ~/jenkins-compose && cd ~/jenkins-compose
+touch docker-compose.yml
+2. 编写 docker-compose.yml
+yaml
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Duser.timezone=Asia/Shanghai
+
+volumes:
+  jenkins-data:
+3. 启动服务
+bash
+# 在后台启动
+docker compose up -d
+
+# 查看状态
+docker compose ps
+
+# 查看日志
+docker compose logs -f
+✅ 验证与初始化配置
+1. 检查容器状态
+bash
+docker ps | grep jenkins
+2. 获取初始管理员密码
+Jenkins 启动后，需要初始密码来完成首次解锁：
+
+bash
+# 查看容器日志中的密码
+docker logs jenkins
+
+# 或者直接查看密码文件
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+3. 访问 Jenkins Web 界面
+打开浏览器，访问 http://你的Ubuntu服务器IP:8080。
+
+4. 完成初始化设置
+解锁 Jenkins：粘贴上一步获取的初始密码，点击"继续"
+
+安装插件：选择"安装推荐的插件"，Jenkins 会自动安装常用插件
+
+创建管理员用户：填写用户名、密码、邮箱等信息，完成创建
+
+配置 Jenkins URL：确认实例地址，完成后进入 Jenkins 主页
+
+🔧 让 Jenkins 能够执行 Docker 命令
+如果希望 Jenkins Pipeline 中能够执行 docker build、docker push 等命令，有两种常用方式：
+
+方式一：挂载 Docker Socket（已配置）
+上面的启动命令已经包含了 -v /var/run/docker.sock:/var/run/docker.sock，这会让 Jenkins 容器直接使用宿主机的 Docker 守护进程。在 Pipeline 中可以直接调用 Docker 命令：
+
+groovy
+stage('Docker Build') {
+    steps {
+        sh 'docker build -t my-app:latest .'
+    }
+}
+方式二：安装 Docker CLI（备选）
+如果挂载 Socket 后仍有问题，可以在 Jenkins 容器内安装 Docker 客户端：
+
+bash
+# 进入容器
+docker exec -it jenkins bash
+
+# 安装 Docker CLI
+apt-get update
+apt-get install -y docker.io
+
+# 退出容器
+exit
+🔌 安装常用插件（可选）
+登录 Jenkins 后，可以通过"系统管理" → "插件管理"安装以下常用插件：
+
+插件名称	用途
+Docker Pipeline	支持在 Pipeline 中使用 Docker 相关语法
+Git	集成 Git 仓库，拉取代码
+Credentials Binding	管理凭据（如 Git 访问 Token、Docker Hub 密码）
+Blue Ocean	现代化的 Pipeline 可视化界面
+📋 常用管理命令
+操作	Docker 命令	Docker Compose 命令
+启动容器	docker start jenkins	docker compose start
+停止容器	docker stop jenkins	docker compose stop
+重启容器	docker restart jenkins	docker compose restart
+查看日志	docker logs -f jenkins	docker compose logs -f
+进入容器	docker exec -it jenkins bash	docker compose exec jenkins bash
+删除容器	docker rm -f jenkins	docker compose down -v
+⚠️ 常见问题排查
+1. 容器启动后立即退出
+原因：通常是端口冲突或权限问题。
+
+解决方法：
+
+bash
+# 查看详细错误日志
+docker logs jenkins
+
+# 检查端口是否被占用
+sudo lsof -i :8080
+
+# 如果端口被占用，可以修改映射端口，如 -p 8081:8080
+2. 无法访问 Web 界面
+原因：防火墙未开放端口或容器未正常运行。
+
+解决方法：
+
+bash
+# 检查容器状态
+docker ps
+
+# 开放防火墙端口（如果使用 UFW）
+sudo ufw allow 8080/tcp
+sudo ufw reload
+3. Jenkins 容器内无法执行 Docker 命令
+原因：Docker Socket 挂载权限不足。
+
+解决方法：
+
+确保启动时添加了 -v /var/run/docker.sock:/var/run/docker.sock
+
+检查宿主机上 /var/run/docker.sock 的权限：ls -la /var/run/docker.sock
+
+4. 数据目录权限问题
+原因：Jenkins 容器内以 jenkins 用户（UID 1000）运行，宿主机目录权限不匹配。
+
+解决方法：
+
+bash
+# 修改宿主机目录所有者为 UID 1000
+sudo chown -R 1000:1000 ~/jenkins-data
+💡 生产环境建议
+配置 HTTPS：使用 Nginx 反向代理 + Let's Encrypt 配置 SSL 证书，确保 Web 界面安全访问
+
+资源限制：为容器设置内存和 CPU 限制：
+
+bash
+docker run -d ... --memory="2g" --cpus="2" jenkins/jenkins:lts
+定期备份：备份 ~/jenkins-data 目录，包含所有任务配置和构建历史
+
+使用持久化卷：确保使用 Docker 卷或挂载目录，避免数据丢失
