@@ -1,0 +1,108 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: nacos3:8848
+      username: hbkNacos3
+      password: hbk_nacos3
+      config:
+        file-extension: yaml
+  config:
+    import: nacos:${spring.application.name}-${spring.profiles.active}.yaml
+
+
+# ------------------------------------------
+# 数据库配置
+spring:
+  datasource:
+    url: jdbc:mysql://mysql8/hbk_ecommerce_data?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: hbk79bkhjk
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+      database: 0
+      timeout: 3000
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: 1000ms
+  ai:
+    openai:
+      api-key: xxx
+      base-url: https://ark.cn-beijing.volces.com/api/v3
+      chat:
+        options:
+          model: xxx
+        completions-path: /chat/completions
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
+    clear-checksums: false
+    show-summary-output: console
+
+
+
+  server:
+    tomcat:
+      max-swallow-size: 100MB
+      max-http-post-size: 104857600
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.hbk.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+# Swagger 接口文档
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  packages-to-scan: com.hbk.controller
+
+swagger:
+  basic:
+    username: swagger
+    password: Hbk@123456
+
+# 服务端口
+server:
+  port: 8080
+  servlet:
+    context-path: /hbk
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+
+# 千川 API 配置
+qianchuan:
+  api:
+    app-id: 1862341091373227
+    secret: xxx
+    host: open.oceanengine.com
+    token-path: /open_api/oauth2/access_token/
+    redirect-uri: http://localhost:8080/callback
+    auth-path: /oauth/authorize
+
+  monitor:
+    interval: 60000
+    history-minutes: 30
+
+  ai:
+    api-key: xxx
+    base-url: https://ark.cn-beijing.volces.com/api/v3
+    model: doubao-seed-2-0-pro-260215
+
+jwt:
+  secret: xxx
+  expiration: 86400000
