@@ -1,0 +1,10 @@
+除了常用的 CommandLineRunner 和 ApplicationRunner，Spring Boot 还提供了多种方法在应用启动后执行代码。选择哪种方式，主要取决于你希望代码执行的时机和场景。
+
+方式						执行时机			是否阻塞启动			能否使用 @Autowired			适用场景
+static 代码块				类加载时			是					否							非常早期、与Spring无关的初始化
+构造方法					对象实例化时		是					否							对象自身的初始化
+@PostConstruct			依赖注入完成后	是					是							简单的Bean初始化逻辑
+InitializingBean			依赖注入完成后	是					是							与@PostConstruct类似，框架接口方式
+SmartInitializingSingleton	所有单例Bean初始化后	是				是							需要所有Bean准备就绪的初始化
+ApplicationReadyEvent	应用完全启动后	否					是							耗时操作、启动后任务
+ApplicationStartedEvent	应用启动中，容器已刷新	是			是							容器启动后但Runner之前的初始化
